@@ -71,7 +71,7 @@ void _removeBackgroundSign(char *cmd_line) {
 	// replace the & (background sign) with space and then remove all tailing spaces.
 	cmd_line[idx] = ' ';
 	// truncate the command line string up to the last non-space character
-	cmd_line[str.find_last_not_of(WHITESPACE, idx) + 1] = 0;
+	cmd_line[str.find_last_not_of(WHITESPACE, idx) + 1] = '\0';
 }
 
 /**
