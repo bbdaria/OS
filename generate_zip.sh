@@ -3,8 +3,8 @@
 # Generates submission zip of all relevant files of HW<X> for input X
 
 # prompt user Hello:
-echo "Is Your HW done yet?! ready to Test?\n"
-echo "Generate a zip file:\n"
+echo "Is Your HW done yet?! ready to Test?"
+echo "Generate a zip file:"
 
 # Prompt user for a number
 read -p "Enter number, for which HW<number>/Wet you would like to zip: " NUM
@@ -15,10 +15,14 @@ if ! [[ "$NUM" =~ ^[0-9]+$ ]] || [ "$NUM" -lt 1 ]; then
     exit 1
 fi
 
-PATH="HW$NUM/Wet"
+HW_PATH="HW$NUM/Wet"
+
+echo "Prepare utilities:"
 
 chmod +x zip_files.sh
-chmod +x $PATH/generate_file_list.sh
+dos2unix zip_files.sh
+chmod +x $HW_PATH/relevant_files.sh
+dos2unix $HW_PATH/relevant_files.sh
 
 # This is the output file with the list of files to zip:
 OUTPUT_FILE="files_to_zip.txt"
@@ -35,6 +39,6 @@ for file in "${GLOBAL_FILES[@]}"; do
     echo "$file" >> "$OUTPUT_FILE"
 done
 
-./$PATH/relevant_files.sh
+./$HW_PATH/relevant_files.sh
 
 ./zip_files.sh files_to_zip.txt

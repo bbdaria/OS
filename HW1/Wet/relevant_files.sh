@@ -1,9 +1,11 @@
 #!/bin/bash
 # generate_file_list.sh
 # Generates a list of files to zip and saves them to a temporary file.
-cd HW1/Wet/code
 
-OUTPUT_FILE="/../../../files_to_zip.txt" # This is the output file with the list of files
+RELATIVE_PATH="HW1/Wet/code"
+OUTPUT_FILE="files_to_zip.txt" # This is the output file with the list of files
+
+cd $RELATIVE_PATH
 
 # Pre-defined list of files (modify this list as needed)
 FILES=(
@@ -18,7 +20,8 @@ FILES=(
 
 # Write the file paths to the output file
 for file in "${FILES[@]}"; do
-    echo "$file" >> "$OUTPUT_FILE"
+    echo "$RELATIVE_PATH/$file" >> "../../../$OUTPUT_FILE"
 done
 
+cd ../../..
 echo "File list generated in $OUTPUT_FILE"

@@ -16,7 +16,7 @@ if [ ! -f "$LIST_FILE" ]; then
 fi
 
 # Read the list file and zip the files
-zip -v "$ZIP_NAME" < "$LIST_FILE"
-# zip -@ "$ZIP_NAME" < "$LIST_FILE"
+# zip -v "$ZIP_NAME" < "$LIST_FILE"
+zip -@ "$ZIP_NAME" < "$LIST_FILE"
 
 echo "Files zipped into $ZIP_NAME"
