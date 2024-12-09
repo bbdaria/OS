@@ -3,27 +3,30 @@
 
 #include <iostream>
 #include "code/commands/Commands.h"
-
-static std::string DEFAULT_START_PROMPT = "smash> ";
+#include "code/joblist/joblist.h"
 
 class SmallShell {
 private:
-    SmallShell();
+    SmallShell() =default;
+    ~SmallShell()=default;
+
+    static const std::string DEFAULT_START_PROMPT;
+
+    JobsList m_jobsList;
     std::string m_start_prompt = DEFAULT_START_PROMPT;
 
 public:
-    Command *CreateCommand(const char *cmd_line);
+    Command* createCommand(const char *cmd_line);
 
     SmallShell(SmallShell const &) = delete; // disable copy ctor
     void operator=(SmallShell const &) = delete; // disable = operator
+
     static SmallShell &getInstance() // make SmallShell singleton
     {
         static SmallShell instance; // Guaranteed to be destroyed.
         // Instantiated on first use.
         return instance;
     }
-
-    ~SmallShell();
 
     void executeCommand(const char *cmd_line);
 
@@ -36,5 +39,7 @@ public:
         }
     }
 };
+
+const std::string SmallShell::DEFAULT_START_PROMPT = "smash> ";
 
 #endif //SMASH_H_
