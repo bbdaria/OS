@@ -27,7 +27,7 @@ public:
 
     void executeCommand(const char *cmd_line);
 
-    void run() {
+    void launch() {
         while (true) {
             std::cout << m_start_prompt;
             std::string cmd_line;

@@ -10,6 +10,6 @@ int main(int argc, char *argv[]) {
     }
 
     SmallShell &smash = SmallShell::getInstance();
-    smash.run();
+    smash.launch();
     return 0;
 }
