@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <sys/wait.h>
+// #include <sys/wait.h>
 #include <iomanip>
-#include "Commands.h"
+#include "Smash.h"
 
 using namespace std;
 

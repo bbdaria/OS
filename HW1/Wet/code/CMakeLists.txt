@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.19)
-project(skeleton_smash)
+project(smash)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(skeleton_smash smash.cpp Commands.cpp signals.cpp)
+# Define variables for source files
+set(SOURCES
+    main.cpp
+    smash/Smash.cpp
+    signals/signals.cpp
+)
+
+# Use the variable in add_executable
+add_executable(smash ${SOURCES})

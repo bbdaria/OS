@@ -1,7 +1,15 @@
+#ifndef SMASH_H_
+#define SMASH_H_
+
+#include <iostream>
+#include "code/commands/Commands.h"
+
+static std::string DEFAULT_START_PROMPT = "smash> ";
+
 class SmallShell {
 private:
-    // TODO: Add your data members
     SmallShell();
+    std::string m_start_prompt = DEFAULT_START_PROMPT;
 
 public:
     Command *CreateCommand(const char *cmd_line);
@@ -19,5 +27,14 @@ public:
 
     void executeCommand(const char *cmd_line);
 
-    // TODO: add extra methods as needed
+    void run() {
+        while (true) {
+            std::cout << m_start_prompt;
+            std::string cmd_line;
+            std::getline(std::cin, cmd_line);
+            executeCommand(cmd_line.c_str());
+        }
+    }
 };
+
+#endif //SMASH_H_

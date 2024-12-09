@@ -1,9 +1,8 @@
-#include <iostream>
 #include <unistd.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include "Commands.h"
+// #include <sys/wait.h>
+#include <signal.h> // library usage
 #include "signals.h"
+#include "smash/Smash.h"
 
 int main(int argc, char *argv[]) {
     if (signal(SIGINT, ctrlCHandler) == SIG_ERR) {
@@ -11,11 +10,6 @@ int main(int argc, char *argv[]) {
     }
 
     SmallShell &smash = SmallShell::getInstance();
-    while (true) {
-        std::cout << "smash> ";
-        std::string cmd_line;
-        std::getline(std::cin, cmd_line);
-        smash.executeCommand(cmd_line.c_str());
-    }
+    smash.run();
     return 0;
 }
