@@ -2,15 +2,14 @@
 #define CHPROMPT_COMMAND_H_
 
 #include "built_in/built_in_command.h"
-#include "code/smash/smash.cpp"
+#include "code/smash/smash.h"
 
 class Chprompt : public BuiltInCommand {
 public:
     std::string m_prompt = "";
-    Chprompt(const char *cmd_line) {
-        // update m_prompt according to the second word in cmd_line
+    Chprompt(const char *cmd_line) : BuiltInCommand(cmd_line) {
+        //TODO: give value to m_prompt
     }
-
     virtual ~Chprompt()=default;
 
     void execute() override {

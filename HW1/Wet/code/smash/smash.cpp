@@ -8,6 +8,7 @@
 #include "Smash.h"
 #include "../util.cpp"
 #include "code/commands/built_in/change_dir/change_dir_command.h"
+// #include "code/commands/built_in/show_current_dir/show_current_dir_command.h"
 
 using namespace std;
 
@@ -20,16 +21,16 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
 
 	if (firstWord.compare("chprompt") == 0) {
-		return new Chprompt(cmd_line);
+		return (Command*)(new Chprompt(cmd_line));
 	}
 	else if (firstWord.compare("showpid") == 0) {
-		return new ShowPidCommand(cmd_line);
+		return (Command*)(new ShowPidCommand(cmd_line));
 	}
 	else if (firstWord.compare("pwd") == 0) {
-		return new GetCurrDirCommand(cmd_line);
+		return (Command*)(new GetCurrDirCommand(cmd_line));
 	}
-	else if (firstWord.compare("pwd") == 0) {
-		return new GetCurrDirCommand(cmd_line);
+	else if (firstWord.compare("cd") == 0) {
+		return (Command*)(new ChangeDirCommand(cmd_line));
 	}
 	/*
 	else if ...
