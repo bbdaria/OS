@@ -16,8 +16,6 @@ private:
     std::string m_start_prompt = DEFAULT_START_PROMPT;
 
 public:
-    Command* createCommand(const char *cmd_line);
-
     SmallShell(SmallShell const &) = delete; // disable copy ctor
     void operator=(SmallShell const &) = delete; // disable = operator
 
@@ -28,11 +26,12 @@ public:
         return instance;
     }
 
+    Command* createCommand(const char *cmd_line);
     void executeCommand(const char *cmd_line);
 
     void launch() {
         while (true) {
-            std::cout << m_start_prompt;
+            std::cout << m_start_prompt << "> ";
             std::string cmd_line;
             std::getline(std::cin, cmd_line);
             executeCommand(cmd_line.c_str());
@@ -40,6 +39,6 @@ public:
     }
 };
 
-const std::string SmallShell::DEFAULT_START_PROMPT = "smash> ";
+const std::string SmallShell::DEFAULT_START_PROMPT = "smash";
 
 #endif //SMASH_H_

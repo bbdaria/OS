@@ -33,6 +33,7 @@ string _rtrim(const std::string &s) {
 }
 
 string _trim(const std::string &s) {
+	// remove whitespace before & after s
 	return _rtrim(_ltrim(s));
 }
 
