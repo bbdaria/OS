@@ -1,9 +1,19 @@
+#ifndef SHOW_PID_COMMAND_H_
+#define SHOW_PID_COMMAND_H_
+
+#include "built_in/built_in_command.h"
+#include "code/smash/smash.cpp"
+
 class ShowPidCommand : public BuiltInCommand {
 public:
     ShowPidCommand(const char *cmd_line);
 
-    virtual ~ShowPidCommand() {
-    }
+    virtual ~ShowPidCommand()=default;
 
-    void execute() override;
+    void execute() override {
+        SmallShell &smash = SmallShell::getInstance();
+        std::cout << smash.getStartPrompt() << " pid is " << getpid() << std::endl;
+    }
 };
+
+#endif // SHOW_PID_COMMAND_H_

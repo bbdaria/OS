@@ -1,4 +1,8 @@
+#ifndef JOBSLIST_H_
+#define JOBSLIST_H_
+
 #include <vector>
+#include "Commands.h"
 
 class JobsList {
 public:
@@ -30,3 +34,5 @@ public:
 
     // TODO: Add extra methods or modify exisitng ones as needed
 };
+
+#endif //JOBSLIST_H_

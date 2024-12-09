@@ -29,6 +29,14 @@ public:
     Command* createCommand(const char *cmd_line);
     void executeCommand(const char *cmd_line);
 
+    void setStartPrompt(std::string& s) {
+        m_start_prompt = s;
+    }
+
+    std::string getStartPrompt() const {
+        return m_start_prompt;
+    }
+
     void launch() {
         while (true) {
             std::cout << m_start_prompt << "> ";
