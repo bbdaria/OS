@@ -49,6 +49,13 @@ int _parseCommandLine(const char *cmd_line, char **args) {
 	FUNC_EXIT()
 }
 
+void _freeArgs(char **args, int words) {
+	for (int i = 0; i < words; ++i) {
+		delete args[i];
+	}
+	delete args;
+}
+
 bool _isBackgroundComamnd(const char *cmd_line) {
 	const string str(cmd_line);
 	return str[str.find_last_not_of(WHITESPACE)] == '&';

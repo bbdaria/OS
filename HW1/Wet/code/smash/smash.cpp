@@ -24,22 +24,23 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	int words = _parseCommandLine(cmd_line, args);
 	if (words == 0) return nullptr;
 
-	string firstWord = args[0];
+	string firstWord = (words == 0 ? "" : args[0]);
+	Command* result = nullptr;
 
 	if (firstWord.compare("chprompt") == 0) {
-		return new Chprompt(args, words);
+		result = new Chprompt(args, words);
 	}
 	else if (firstWord.compare("showpid") == 0) {
-		return new ShowPidCommand();
+		result = new ShowPidCommand();
 	}
 	else if (firstWord.compare("pwd") == 0) {
-		return new GetCurrDirCommand();
+		result = new GetCurrDirCommand();
 	}
 	else if (firstWord.compare("cd") == 0) {
-		return new ChangeDirCommand(args, words);
+		result = new ChangeDirCommand(args, words);
 	}
 	else if (firstWord.compare("jobs") == 0) {
-		return new JobsCommand();
+		result = new JobsCommand();
 	}
 
 	/*
@@ -49,7 +50,8 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	return new ExternalCommand(cmd_line);
 	}
 	*/
-	return nullptr;
+	_freeArgs(args, words);
+	return result;
 }
 
 void SmallShell::executeCommand(const char *cmd_line) {
