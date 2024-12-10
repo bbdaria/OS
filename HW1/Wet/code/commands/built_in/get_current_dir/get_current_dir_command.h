@@ -18,7 +18,7 @@ public:
         }
         else {
             // code should NEVER reach here!!!
-            std::cerr << "Error: Unable to retrieve current directory." << std::endl;
+            perror("smash error: getcwd failed");
         }
     }
 };

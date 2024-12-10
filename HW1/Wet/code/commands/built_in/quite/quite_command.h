@@ -1,9 +1,34 @@
+#ifndef QUIT_COMMAND_H_
+#define QUIT_COMMAND_H_
+
+#include <unistd.h> // getcwd
+#include <iostream> // std::cout and std::cerr
+#include "built_in/built_in_command.h"
+#include "code/smash/Smash.h"
+#include "code/joblist/joblist.h"
+
 class QuitCommand : public BuiltInCommand {
-    // TODO: Add your data members public:
-    QuitCommand(const char *cmd_line, JobsList *jobs);
-
-    virtual ~QuitCommand() {
+public:
+    QuitCommand(char** args, int words) : m_kill_jobsList(false) {
+        if (words >= 2) {
+            std::string kill_str = "kill";
+            if (kill_str.compare(args[1])) {
+                m_kill_jobsList = true;
+            }
+        }
     }
+    virtual ~QuitCommand()=default;
 
-    void execute() override;
+    void execute() override {
+        SmallShell &smash = SmallShell::getInstance();
+        JobsList& jobsList = smash.getJobsList();
+        if (m_kill_jobsList) {
+            jobsList.killAllJobs();
+        }
+        std::cout << std::endl;
+    }
+private:
+    bool m_kill_jobsList;
 };
+
+#endif // QUIT_COMMAND_H_

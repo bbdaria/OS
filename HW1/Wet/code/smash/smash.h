@@ -15,6 +15,7 @@ private:
     JobsList m_jobsList;
     std::string m_start_prompt = DEFAULT_START_PROMPT;
     char **m_plastPwd = nullptr;
+    bool m_quitCalled = false;
 
 public:
     SmallShell(SmallShell const &) = delete; // disable copy ctor
@@ -51,8 +52,12 @@ public:
         *m_plastPwd = cwd;
     }
 
+    void quit() {
+        m_quitCalled = true;
+    }
+
     void launch() {
-        while (true) {
+        while (!m_quitCalled) {
             std::cout << m_start_prompt << "> ";
             std::string cmd_line;
             std::getline(std::cin, cmd_line);
