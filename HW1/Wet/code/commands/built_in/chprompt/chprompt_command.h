@@ -6,7 +6,6 @@
 
 class Chprompt : public BuiltInCommand {
 public:
-    std::string m_prompt = "";
     Chprompt(const char *cmd_line) : BuiltInCommand(cmd_line) {
         //TODO: give value to m_prompt
     }
@@ -16,6 +15,8 @@ public:
         SmallShell &smash = SmallShell::getInstance();
         smash.setStartPrompt(m_prompt);
     }
+private:
+    std::string m_prompt = "";
 };
 
 #endif // CHPROMPT_COMMAND_H_

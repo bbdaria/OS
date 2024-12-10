@@ -30,7 +30,7 @@ public:
     void executeCommand(const char *cmd_line);
 
     void setStartPrompt(std::string& s) {
-        m_start_prompt = s;
+        m_start_prompt = (s == "" ? DEFAULT_START_PROMPT : s);
     }
 
     std::string getStartPrompt() const {

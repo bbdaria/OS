@@ -7,8 +7,10 @@
 #include <iomanip>
 #include "Smash.h"
 #include "../util.cpp"
-#include "code/commands/built_in/change_dir/change_dir_command.h"
-// #include "code/commands/built_in/show_current_dir/show_current_dir_command.h"
+#include "../built_in/chprompt/chprompt_command.h"
+#include "../built_in/show_pid/show_pid_command.h"
+#include "../built_in/get_current_dir/get_current_dir_command.h"
+#include "../built_in/change_dir/change_dir_command.h"
 
 using namespace std;
 
@@ -21,17 +23,17 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
 
 	if (firstWord.compare("chprompt") == 0) {
-		return (Command*)(new Chprompt(cmd_line));
+		return new Chprompt(cmd_line);
 	}
 	else if (firstWord.compare("showpid") == 0) {
-		return (Command*)(new ShowPidCommand(cmd_line));
+		return new ShowPidCommand(cmd_line);
 	}
 	else if (firstWord.compare("pwd") == 0) {
-		return (Command*)(new GetCurrDirCommand(cmd_line));
+		return new GetCurrDirCommand(cmd_line);
 	}
-	else if (firstWord.compare("cd") == 0) {
-		return (Command*)(new ChangeDirCommand(cmd_line));
-	}
+	// else if (firstWord.compare("cd") == 0) {
+	// 	return new ChangeDirCommand(cmd_line); // plastPwd might not needed as input ?
+	// }
 	/*
 	else if ...
 	.....
@@ -43,9 +45,10 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 }
 
 void SmallShell::executeCommand(const char *cmd_line) {
-    // TODO: Add your implementation here
-    // for example:
     Command* cmd = createCommand(cmd_line);
-    cmd->execute();
+	if (cmd != nullptr) {
+        cmd->execute();
+        delete cmd; // Prevent memory leaks
+    }
     // Please note that you must fork smash process for some commands (e.g., external commands....)
 }

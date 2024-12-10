@@ -11,6 +11,7 @@ public:
     virtual ~ShowPidCommand()=default;
 
     void execute() override {
+        // this is built-in command and so will run at smash PCB
         SmallShell &smash = SmallShell::getInstance();
         std::cout << smash.getStartPrompt() << " pid is " << getpid() << std::endl;
     }
