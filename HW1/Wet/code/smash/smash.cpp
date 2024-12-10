@@ -11,6 +11,7 @@
 #include "../built_in/show_pid/show_pid_command.h"
 #include "../built_in/get_current_dir/get_current_dir_command.h"
 #include "../built_in/change_dir/change_dir_command.h"
+#include "../built_in/jobs/jobs_command.h"
 
 using namespace std;
 
@@ -34,6 +35,10 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	// else if (firstWord.compare("cd") == 0) {
 	// 	return new ChangeDirCommand(cmd_line); // plastPwd might not needed as input ?
 	// }
+	else if (firstWord.compare("jobs") == 0) {
+		return new JobsCommand(cmd_line);
+	}
+
 	/*
 	else if ...
 	.....

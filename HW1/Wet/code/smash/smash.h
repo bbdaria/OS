@@ -37,6 +37,10 @@ public:
         return m_start_prompt;
     }
 
+    JobsList& getJobsList() {
+        return m_jobsList;
+    }
+
     void launch() {
         while (true) {
             std::cout << m_start_prompt << "> ";
