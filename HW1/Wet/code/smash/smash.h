@@ -12,6 +12,7 @@ private:
 
     static const std::string DEFAULT_START_PROMPT;
 
+    JobsList::JobEntry* m_forground = nullptr;
     JobsList m_jobsList;
     std::string m_start_prompt = DEFAULT_START_PROMPT;
     char **m_plastPwd = nullptr;
@@ -56,12 +57,21 @@ public:
         m_quitCalled = true;
     }
 
+    JobsList::JobEntry* getForeground() {
+        return m_forground;
+    }
+
+    void setForeGround(JobsList::JobEntry* foreground) {
+        m_forground = foreground;
+    }
+
     void launch() {
         while (!m_quitCalled) {
             std::cout << m_start_prompt << "> ";
             std::string cmd_line;
             std::getline(std::cin, cmd_line);
             executeCommand(cmd_line.c_str());
+            setForeGround(nullptr);
         }
     }
 };
