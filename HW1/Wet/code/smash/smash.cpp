@@ -12,6 +12,8 @@
 #include "../built_in/get_current_dir/get_current_dir_command.h"
 #include "../built_in/change_dir/change_dir_command.h"
 #include "../built_in/jobs/jobs_command.h"
+#include "../built_in/foreground/foreground_command.h"
+#include "../built_in/quit/quit_command.h"
 
 using namespace std;
 
@@ -42,6 +44,12 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	else if (firstWord.compare("jobs") == 0) {
 		result = new JobsCommand();
 	}
+	else if (firstWord.compare("fg") == 0) {
+		result = new ForegroundCommand(args, words);
+	}
+	else if (firstWord.compare("quit") == 0) {
+		result = new QuitCommand(args, words);
+	}
 
 	/*
 	else if ...
@@ -56,6 +64,7 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 
 void SmallShell::executeCommand(const char *cmd_line) {
     Command* cmd = createCommand(cmd_line);
+	m_jobsList.removeFinishedJobs(); // removing finished jobs before executing cmd
 	if (cmd != nullptr) {
         cmd->execute();
         delete cmd; // Prevent memory leaks

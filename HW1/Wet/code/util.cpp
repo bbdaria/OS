@@ -78,3 +78,13 @@ void _removeBackgroundSign(char *cmd_line) {
 	// truncate the command line string up to the last non-space character
 	cmd_line[str.find_last_not_of(WHITESPACE, idx) + 1] = '\0';
 }
+
+bool _isDigitsOnly(const char* str) {
+	if (str == nullptr) return false;
+    for (size_t i = 0; i < strlen(str); ++i) {
+        if (!isdigit(static_cast<unsigned char>(str[i]))) {
+            return false; // Return false if any character is not a digit
+        }
+    }
+    return true; // All characters are digits
+}

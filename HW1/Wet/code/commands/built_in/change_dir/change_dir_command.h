@@ -33,6 +33,7 @@ public:
         }
         if (m_error) {
             std::cerr << m_err_msg << std::endl;
+            return;
         }
         // this is built-in command and so will run at smash PCB
         char *currDir = getcwd(nullptr, 0);

@@ -2,23 +2,54 @@
 #define JOBSLIST_H_
 
 #include <vector>
-#include "Commands.h"
+#include "external/external_command.h"
 
 class JobsList {
 public:
     class JobEntry {
-        // TODO: Add your data members
+        ExternalCommand* m_cmd;
+        int m_jobId;
+        int m_processId;
+        public:
+            JobEntry(ExternalCommand *cmd, int jobId, int processId) {
+                m_cmd = cmd;
+                m_jobId = jobId;
+                m_processId = processId;
+            }
+
+            int getPID() {
+                return m_processId;
+            }
     };
 
-    // TODO: Add your data members
-public:
-    JobsList();
+    JobsList()=default;
+    ~JobsList()=default;
 
-    ~JobsList();
+    bool contains(int jobId) {
+        return getJobById(jobId) != nullptr;
+    }
 
-    void addJob(Command *cmd, bool isStopped = false);
+    bool empty() {
+        return m_listOfJobs.empty();
+    }
 
-    void printJobsList();
+    int getMaxId() {
+        return m_maxJobId;
+    }
+
+    void addJob(ExternalCommand *cmd, bool isStopped = false) {
+        removeFinishedJobs(); // removing finished jobs before adding
+
+        int jobId = m_maxJobId+1;
+        m_maxJobId++;
+
+        JobEntry job(cmd, jobId, 0);
+        m_listOfJobs.push_back(job);
+    }
+
+    void printJobsList() {
+        removeFinishedJobs(); // removing finished jobs before printing
+    }
 
     void killAllJobs();
 
@@ -32,7 +63,10 @@ public:
 
     JobEntry *getLastStoppedJob(int *jobId);
 
-    // TODO: Add extra methods or modify exisitng ones as needed
+private:
+    std::vector<JobEntry> m_listOfJobs;
+    int m_numberOfJobsInList=0;
+    int m_maxJobId = 0;
 };
 
 #endif //JOBSLIST_H_
