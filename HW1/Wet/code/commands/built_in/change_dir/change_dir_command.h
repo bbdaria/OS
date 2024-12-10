@@ -7,30 +7,52 @@
 
 class ChangeDirCommand : public BuiltInCommand {
 public:
-    ChangeDirCommand(const char *cmd_line, char **plastPwd) : BuiltInCommand(cmd_line) {
-        std::string cmd_str = cmd_line;
+    ChangeDirCommand(char** args, int words) : m_error(false), m_skip(false) {
+        if (words <= 1) {
+            m_skip = true;
+        }
+        else if (words > 2) {
+            m_err_msg = "smash error: cd: too many arguments";
+            m_error = true;
+        }
+        else {
+            m_dir = args[1];
+            SmallShell& smash = SmallShell::getInstance();
+            if (m_dir.compare("-") && smash.plastPwd()==nullptr) {
+                m_err_msg = "smash error: cd: OLDPWD not set";
+                m_error = true;
+            }
+        }
     }
     virtual ~ChangeDirCommand() = default;
 
     void execute() override {
+        if (m_skip) {
+            std::cout << std::endl;
+            return;
+        }
+        if (m_error) {
+            std::cerr << m_err_msg << std::endl;
+        }
         // this is built-in command and so will run at smash PCB
         char *currDir = getcwd(nullptr, 0);
-        bool changed = false;
-        
-        // TODO: add logic (and apply change if needed) here
+        SmallShell& smash = SmallShell::getInstance();
+        smash.updatePlastPwd(currDir);
 
-        if (changed) {
-            if (plastPwd != nullptr && *plastPwd != nullptr) delete plastPwd;
-            *plastPwd = currDir;
+        if (m_dir.compare("-")) {
+            m_dir = smash.plastPwd();
         }
-        else {
-            delete currDir;
-        }
+        
+        int result = chdir(m_dir.c_str());
+        if (!result) perror("smash error: chdir failed");
+        else std::cout << std::endl;
     }
 
 private:
-    std::string cmd_line = "";
-    char **plastPwd = nullptr; // Pointer to the last working directory
+    bool m_error;
+    bool m_skip;
+    std::string m_err_msg;
+    std::string m_dir;
 };
 
 #endif // CHANGE_DIR_COMMAND_H_

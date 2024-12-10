@@ -19,24 +19,27 @@ using namespace std;
 * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
 */
 Command* SmallShell::createCommand(const char *cmd_line) {
-	// For example:
 	string cmd_s = _trim(string(cmd_line));
-	string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
+	char** args;
+	int words = _parseCommandLine(cmd_line, args);
+	if (words == 0) return nullptr;
+
+	string firstWord = args[0];
 
 	if (firstWord.compare("chprompt") == 0) {
-		return new Chprompt(cmd_line);
+		return new Chprompt(args, words);
 	}
 	else if (firstWord.compare("showpid") == 0) {
-		return new ShowPidCommand(cmd_line);
+		return new ShowPidCommand();
 	}
 	else if (firstWord.compare("pwd") == 0) {
-		return new GetCurrDirCommand(cmd_line);
+		return new GetCurrDirCommand();
 	}
-	// else if (firstWord.compare("cd") == 0) {
-	// 	return new ChangeDirCommand(cmd_line); // plastPwd might not needed as input ?
-	// }
+	else if (firstWord.compare("cd") == 0) {
+		return new ChangeDirCommand(args, words);
+	}
 	else if (firstWord.compare("jobs") == 0) {
-		return new JobsCommand(cmd_line);
+		return new JobsCommand();
 	}
 
 	/*
@@ -55,5 +58,8 @@ void SmallShell::executeCommand(const char *cmd_line) {
         cmd->execute();
         delete cmd; // Prevent memory leaks
     }
+	else {
+		std::cout << std::endl;
+	}
     // Please note that you must fork smash process for some commands (e.g., external commands....)
 }

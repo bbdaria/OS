@@ -7,8 +7,8 @@
 
 class GetCurrDirCommand : public BuiltInCommand {
 public:
-    GetCurrDirCommand(const char *cmd_line) : BuiltInCommand(cmd_line) {}
-    ~GetCurrDirCommand() override = default;
+    GetCurrDirCommand()=default;
+    ~GetCurrDirCommand()=default;
 
     void execute() override {
         char *cwd = getcwd(nullptr, 0);

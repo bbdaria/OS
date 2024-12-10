@@ -6,17 +6,20 @@
 
 class Chprompt : public BuiltInCommand {
 public:
-    Chprompt(const char *cmd_line) : BuiltInCommand(cmd_line) {
-        //TODO: give value to m_prompt
+    Chprompt(char** args, int words) : m_prompt("") {
+        if (words >= 2) {
+            m_prompt = args[1];
+        }
     }
     virtual ~Chprompt()=default;
 
     void execute() override {
         SmallShell &smash = SmallShell::getInstance();
         smash.setStartPrompt(m_prompt);
+        std::cout << std::endl;
     }
 private:
-    std::string m_prompt = "";
+    std::string m_prompt;
 };
 
 #endif // CHPROMPT_COMMAND_H_

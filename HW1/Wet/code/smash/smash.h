@@ -14,6 +14,7 @@ private:
 
     JobsList m_jobsList;
     std::string m_start_prompt = DEFAULT_START_PROMPT;
+    char **m_plastPwd = nullptr;
 
 public:
     SmallShell(SmallShell const &) = delete; // disable copy ctor
@@ -30,7 +31,7 @@ public:
     void executeCommand(const char *cmd_line);
 
     void setStartPrompt(std::string& s) {
-        m_start_prompt = (s == "" ? DEFAULT_START_PROMPT : s);
+        m_start_prompt = (s.size() ? s : DEFAULT_START_PROMPT);
     }
 
     std::string getStartPrompt() const {
@@ -39,6 +40,15 @@ public:
 
     JobsList& getJobsList() {
         return m_jobsList;
+    }
+
+    char* plastPwd() {
+        return *m_plastPwd;
+    }
+
+    void updatePlastPwd(char* cwd) {
+        delete *m_plastPwd;
+        *m_plastPwd = cwd;
     }
 
     void launch() {

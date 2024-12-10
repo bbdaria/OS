@@ -5,10 +5,8 @@
 
 class BuiltInCommand : public Command {
 public:
-    BuiltInCommand(const char *cmd_line);
-
-    virtual ~BuiltInCommand() {
-    }
+    BuiltInCommand()=default;
+    ~BuiltInCommand()=default;
 };
 
 #endif // BUILT_IN_COMMAND_H_

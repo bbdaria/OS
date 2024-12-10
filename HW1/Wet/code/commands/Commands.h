@@ -7,9 +7,8 @@
 class Command {
 // TODO: Add your data members
 public:
-    Command(const char *cmd_line);
-
-    virtual ~Command();
+    Command()=default;
+    ~Command()=default;
 
     virtual void execute() = 0;
 

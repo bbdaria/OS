@@ -6,8 +6,7 @@
 
 class ShowPidCommand : public BuiltInCommand {
 public:
-    ShowPidCommand(const char *cmd_line) : BuiltInCommand(cmd_line){}
-
+    ShowPidCommand()=default;
     virtual ~ShowPidCommand()=default;
 
     void execute() override {

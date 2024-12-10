@@ -9,8 +9,8 @@
 
 class JobsCommand : public BuiltInCommand {
 public:
-    JobsCommand(const char *cmd_line) : BuiltInCommand(cmd_line) {}
-    ~JobsCommand() = default;
+    JobsCommand()=default;
+    ~JobsCommand()=default;
 
     void execute() override {
         SmallShell &smash = SmallShell::getInstance();
