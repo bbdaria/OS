@@ -7,12 +7,12 @@
 class JobsList {
 public:
     class JobEntry {
-        ExternalCommand* m_cmd;
+        char* m_cmd;
         int m_jobId;
         int m_processId;
         public:
-            JobEntry(ExternalCommand *cmd, int jobId, int processId) {
-                m_cmd = cmd;
+            JobEntry(const char* cmd, int jobId, int processId) {
+                strcpy(m_cmd, cmd);
                 m_jobId = jobId;
                 m_processId = processId;
             }
@@ -37,13 +37,12 @@ public:
         return m_maxJobId;
     }
 
-    void addJob(ExternalCommand *cmd, bool isStopped = false) {
+    void addJob(const char* cmd, bool isStopped = false) {
         removeFinishedJobs(); // removing finished jobs before adding
 
         int jobId = m_maxJobId+1;
         m_maxJobId++;
-
-        JobEntry job(cmd, jobId, 0);
+        JobEntry job(cmd, jobId, getpid());
         m_listOfJobs.push_back(job);
     }
 

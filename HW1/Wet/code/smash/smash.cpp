@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-// #include <sys/wait.h>
 #include <iomanip>
 #include "Smash.h"
 #include "../util.cpp"
@@ -24,42 +23,50 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	string cmd_s = _trim(string(cmd_line));
 	char** args;
 	int words = _parseCommandLine(cmd_line, args);
-	if (words == 0) return nullptr;
-
-	string firstWord = (words == 0 ? "" : args[0]);
 	Command* result = nullptr;
-
-	if (firstWord.compare("chprompt") == 0) {
-		result = new Chprompt(args, words);
+	if (words > 0) {
+		result = _createBuiltInCommand(args, words);
+		result = (result!=nullptr ? result : _createExternalCommand(args, words));
 	}
-	else if (firstWord.compare("showpid") == 0) {
-		result = new ShowPidCommand();
-	}
-	else if (firstWord.compare("pwd") == 0) {
-		result = new GetCurrDirCommand();
-	}
-	else if (firstWord.compare("cd") == 0) {
-		result = new ChangeDirCommand(args, words);
-	}
-	else if (firstWord.compare("jobs") == 0) {
-		result = new JobsCommand();
-	}
-	else if (firstWord.compare("fg") == 0) {
-		result = new ForegroundCommand(args, words);
-	}
-	else if (firstWord.compare("quit") == 0) {
-		result = new QuitCommand(args, words);
-	}
-
-	/*
-	else if ...
-	.....
-	else {
-	return new ExternalCommand(cmd_line);
-	}
-	*/
 	_freeArgs(args, words);
 	return result;
+}
+
+BuiltInCommand* _createBuiltInCommand(char** args, int words) {
+	string firstWord = strcpy(args[0]);
+	_removeBackgroundSign(firstWord);
+
+	if (firstWord.compare("chprompt") == 0) {
+		return new Chprompt(args, words);
+	}
+	else if (firstWord.compare("showpid") == 0) {
+		return new ShowPidCommand();
+	}
+	else if (firstWord.compare("pwd") == 0) {
+		return new GetCurrDirCommand();
+	}
+	else if (firstWord.compare("cd") == 0) {
+		return new ChangeDirCommand(args, words);
+	}
+	else if (firstWord.compare("jobs") == 0) {
+		return new JobsCommand();
+	}
+	else if (firstWord.compare("fg") == 0) {
+		return new ForegroundCommand(args, words);
+	}
+	else if (firstWord.compare("quit") == 0) {
+		return new QuitCommand(args, words);
+	}
+	return nullptr;
+}
+
+ExternalCommand* _createExternalCommand(char** args, int words) {
+	string firstWord = args[0];
+	
+	// if (firstWord.compare("chprompt") == 0) {
+	// 	return new Chprompt(args, words);
+	// }
+	return nullptr;
 }
 
 void SmallShell::executeCommand(const char *cmd_line) {
@@ -72,5 +79,4 @@ void SmallShell::executeCommand(const char *cmd_line) {
 	else {
 		std::cout << std::endl;
 	}
-    // Please note that you must fork smash process for some commands (e.g., external commands....)
 }
