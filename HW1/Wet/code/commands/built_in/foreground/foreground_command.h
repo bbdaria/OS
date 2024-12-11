@@ -51,6 +51,7 @@ public:
         JobsList& jobsList = smash.getJobsList();
         JobsList::JobEntry* jobEntry = jobsList.getJobById(m_jobId);
         smash.setForeGround(jobEntry);
+        jobEntry->printForegroundJob();
 
         if (waitpid(jobEntry->getPID(), nullptr) == -1) {
             perror("smash error: waitpid failed");

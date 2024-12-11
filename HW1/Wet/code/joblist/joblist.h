@@ -20,6 +20,22 @@ public:
             int getPID() {
                 return m_processId;
             }
+
+            int getId() {
+                return m_jobId;
+            }
+
+            char* getCmd() {
+                return m_cmd;
+            }
+
+            void printJob() {
+                std::cout << "[" << m_jobId << "] " << m_cmd << std::endl;
+            }
+
+            void printForegroundJob() {
+                std::cout << m_cmd << m_processId << std::endl;
+            }
     };
 
     JobsList()=default;
@@ -37,24 +53,42 @@ public:
         return m_maxJobId;
     }
 
-    void addJob(const char* cmd, bool isStopped = false) {
+    void addJob(const char* cmd, int pid, bool isStopped = false) {
         removeFinishedJobs(); // removing finished jobs before adding
 
         int jobId = m_maxJobId+1;
         m_maxJobId++;
-        JobEntry job(cmd, jobId, getpid());
+        JobEntry job(cmd, jobId, pid);
         m_listOfJobs.push_back(job);
     }
 
     void printJobsList() {
         removeFinishedJobs(); // removing finished jobs before printing
+        for (JobEntry& jobEntry : m_listOfJobs) {
+            jobEntry.printJob();
+        }
     }
 
-    void killAllJobs();
+    void killAllJobs() {
+        std::cout << SmallShell::getInstance().getStartPrompt() << ": sending SIGKILL";
+        std::cout << " signal to " << m_listOfJobs.size() << " jobs:" << std::endl;
+        for (JobEntry& jobEntry : m_listOfJobs) {
+            int pid = jobEntry.getPID();
+            kill(pid, SIGINT);
+            std::cout << pid << ": " << jobEntry.getCmd() << std::endl;
+        }
+    }
 
     void removeFinishedJobs();
 
-    JobEntry *getJobById(int jobId);
+    JobEntry* getJobById(int jobId) {
+        for (JobEntry& jobEntry : m_listOfJobs) {
+            if (jobEntry.getId() == jobId) {
+                return &jobEntry;
+            }
+        }
+        return nullptr;
+    }
 
     void removeJobById(int jobId);
 

@@ -30,7 +30,7 @@ public:
             else {
                 SmallShell& smash = SmallShell::getInstance();
                 JobsList& jobsList = smash.getJobsList();
-                jobsList.addJob(m_cmd_line, pid);
+                jobsList.addJob(m_cmd_line.c_str(), pid, false);
                 std::cout << std::endl;
             }
         }
