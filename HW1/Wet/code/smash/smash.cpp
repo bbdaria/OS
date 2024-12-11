@@ -109,7 +109,4 @@ void SmallShell::executeCommand(const char *cmd_line) {
         cmd->execute();
         delete cmd; // Prevent memory leaks
     }
-	else {
-		std::cout << std::endl;
-	}
 }
