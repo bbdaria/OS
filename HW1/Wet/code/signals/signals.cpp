@@ -14,7 +14,7 @@ void ctrlCHandler(int sig_num) {
 
     if (foreground != nullptr) {
         int pid = foreground->getPID();
-        if (kill(pid, SIGINT) == -1) {
+        if (kill(pid, SIGKILL) == -1) {
             perror("smash error: kill failed");
         } else {
             std::cout << smash.getStartPrompt() << ": process " << pid << " was killed";

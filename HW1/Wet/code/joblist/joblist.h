@@ -7,35 +7,32 @@
 class JobsList {
 public:
     class JobEntry {
-        char* m_cmd;
+        std::string m_cmd;
         int m_jobId;
         int m_processId;
-        public:
-            JobEntry(const char* cmd, int jobId, int processId) {
-                strcpy(m_cmd, cmd);
-                m_jobId = jobId;
-                m_processId = processId;
-            }
+    public:
+        JobEntry(const std::string& cmd, int jobId, int processId)
+            : m_cmd(cmd), m_jobId(jobId), m_processId(processId) {}
 
-            int getPID() {
-                return m_processId;
-            }
+        int getPID() {
+            return m_processId;
+        }
 
-            int getId() {
-                return m_jobId;
-            }
+        int getId() {
+            return m_jobId;
+        }
 
-            char* getCmd() {
-                return m_cmd;
-            }
+        std::string& getCmd() {
+            return m_cmd;
+        }
 
-            void printJob() {
-                std::cout << "[" << m_jobId << "] " << m_cmd << std::endl;
-            }
+        void printJob() {
+            std::cout << "[" << m_jobId << "] " << m_cmd << std::endl;
+        }
 
-            void printForegroundJob() {
-                std::cout << m_cmd << m_processId << std::endl;
-            }
+        void printForegroundJob() {
+            std::cout << m_cmd << m_processId;
+        }
     };
 
     JobsList()=default;
@@ -74,12 +71,21 @@ public:
         std::cout << " signal to " << m_listOfJobs.size() << " jobs:" << std::endl;
         for (JobEntry& jobEntry : m_listOfJobs) {
             int pid = jobEntry.getPID();
-            kill(pid, SIGINT);
+            kill(pid, SIGKILL);
             std::cout << pid << ": " << jobEntry.getCmd() << std::endl;
         }
     }
 
-    void removeFinishedJobs();
+    void removeFinishedJobs() {
+        for (auto it = m_listOfJobs.begin(); it != m_listOfJobs.end();) {
+            int status;
+            if (waitpid(it->getPID(), &status, WNOHANG) > 0) {
+                it = m_listOfJobs.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
 
     JobEntry* getJobById(int jobId) {
         for (JobEntry& jobEntry : m_listOfJobs) {
@@ -90,8 +96,15 @@ public:
         return nullptr;
     }
 
-    void removeJobById(int jobId);
-
+    void JobsList::removeJobById(int jobId) {
+        for (auto it = m_listOfJobs.begin(); it != m_listOfJobs.end(); ++it) {
+            if (it->getId() == jobId) {
+                m_listOfJobs.erase(it);
+                return;
+            }
+        }
+    }
+    
     JobEntry *getLastJob(int *lastJobId);
 
     JobEntry *getLastStoppedJob(int *jobId);
