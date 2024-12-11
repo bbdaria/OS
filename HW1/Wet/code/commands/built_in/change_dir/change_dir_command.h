@@ -3,7 +3,7 @@
 
 #include "built_in/built_in_command.h"
 #include <unistd.h> // getcwd
-#include <iostream> // std::cout and std::cerr
+#include <iostream> // std::cerr
 
 class ChangeDirCommand : public BuiltInCommand {
 public:
@@ -36,7 +36,7 @@ public:
         SmallShell& smash = SmallShell::getInstance();
         smash.updatePlastPwd(currDir);
         if (m_skip) {
-            std::cout << std::endl;
+            printOut(std::endl);
             return;
         }
         if (m_dir.compare("-")) {
@@ -45,7 +45,7 @@ public:
         
         int result = chdir(m_dir.c_str());
         if (!result) perror("smash error: chdir failed");
-        else std::cout << std::endl;
+        else printOut(std::endl);
     }
 
 private:

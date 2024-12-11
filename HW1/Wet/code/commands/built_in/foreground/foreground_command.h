@@ -2,7 +2,7 @@
 #define FOREGROUND_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include <iostream> // std::cout and std::cerr
+#include <iostream> // std::cerr
 #include <sys/wait.h>
 #include "built_in/built_in_command.h"
 #include "code/smash/Smash.h"
@@ -51,13 +51,18 @@ public:
         JobsList& jobsList = smash.getJobsList();
         JobsList::JobEntry* jobEntry = jobsList.getJobById(m_jobId);
         smash.setForeGround(jobEntry);
-        jobEntry->printForegroundJob();
+        
+        int fgPID = jobEntry->getPID();
+        std::string cmd_line = jobEntry->getCmdLine();
+        printOut(cmd_line);
+        printOut(" ");
+        printOut(std::to_string(fgPID));
 
-        if (waitpid(jobEntry->getPID(), nullptr) == -1) {
+        if (waitpid(fgPID, nullptr) == -1) {
             perror("smash error: waitpid failed");
             return;
         }
-        std::cout << std::endl;
+        printOut(std::endl);
     }
 private:
     bool m_error;

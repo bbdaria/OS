@@ -2,7 +2,6 @@
 #define QUIT_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include <iostream> // std::cout and std::cerr
 #include "built_in/built_in_command.h"
 #include "code/smash/Smash.h"
 #include "code/joblist/joblist.h"
@@ -23,9 +22,9 @@ public:
         SmallShell &smash = SmallShell::getInstance();
         JobsList& jobsList = smash.getJobsList();
         if (m_kill_jobsList) {
-            jobsList.killAllJobs();
+            jobsList.killAllJobs(this);
         }
-        std::cout << std::endl;
+        printOut(std::endl);
     }
 private:
     bool m_kill_jobsList;

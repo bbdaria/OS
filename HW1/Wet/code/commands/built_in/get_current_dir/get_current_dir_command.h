@@ -2,7 +2,7 @@
 #define GET_CURRENT_DIR_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include <iostream> // std::cout and std::cerr
+#include <iostream> // std::cerr
 #include "built_in/built_in_command.h"
 
 class GetCurrDirCommand : public BuiltInCommand {
@@ -13,7 +13,8 @@ public:
     void execute() override {
         char *cwd = getcwd(nullptr, 0);
         if (cwd != nullptr) {
-            std::cout << cwd << std::endl;
+            printOut(cwd);
+            printOut(std::endl);
             free(cwd);
         }
         else {

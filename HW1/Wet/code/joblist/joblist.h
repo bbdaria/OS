@@ -7,12 +7,12 @@
 class JobsList {
 public:
     class JobEntry {
-        std::string m_cmd;
+        std::string m_cmd_line;
         int m_jobId;
         int m_processId;
     public:
-        JobEntry(const std::string& cmd, int jobId, int processId)
-            : m_cmd(cmd), m_jobId(jobId), m_processId(processId) {}
+        JobEntry(const std::string& cmd_line, int jobId, int processId)
+            : m_cmd_line(cmd_line), m_jobId(jobId), m_processId(processId) {}
 
         int getPID() {
             return m_processId;
@@ -22,16 +22,16 @@ public:
             return m_jobId;
         }
 
-        std::string& getCmd() {
-            return m_cmd;
+        std::string& getCmdLine() {
+            return m_cmd_line;
         }
 
-        void printJob() {
-            std::cout << "[" << m_jobId << "] " << m_cmd << std::endl;
-        }
-
-        void printForegroundJob() {
-            std::cout << m_cmd << m_processId;
+        void printJob(Command* command) {
+            command->printOut("[");
+            command->printOut(std::to_string(m_jobId));
+            command->printOut("] ");
+            command->printOut(m_cmd_line);
+            command->printOut(std::endl);
         }
     };
 
@@ -59,20 +59,26 @@ public:
         m_listOfJobs.push_back(job);
     }
 
-    void printJobsList() {
+    void printJobsList(Command* command) {
         removeFinishedJobs(); // removing finished jobs before printing
         for (JobEntry& jobEntry : m_listOfJobs) {
-            jobEntry.printJob();
+            jobEntry.printJob(command);
         }
     }
 
-    void killAllJobs() {
-        std::cout << SmallShell::getInstance().getStartPrompt() << ": sending SIGKILL";
-        std::cout << " signal to " << m_listOfJobs.size() << " jobs:" << std::endl;
+    void killAllJobs(Command* command) {
+        command->printOut(SmallShell::getInstance().getStartPrompt());
+        command->printOut(": sending SIGKILL signal to ");
+        command->printOut(std::to_string(m_listOfJobs.size()));
+        command->printOut(" jobs:");
+        command->printOut(std::endl);
         for (JobEntry& jobEntry : m_listOfJobs) {
             int pid = jobEntry.getPID();
             kill(pid, SIGKILL);
-            std::cout << pid << ": " << jobEntry.getCmd() << std::endl;
+            command->printOut(std::to_string(pid));
+            command->printOut(": ");
+            command->printOut(jobEntry.getCmdLine());
+            command->printOut(std::endl);
         }
     }
 

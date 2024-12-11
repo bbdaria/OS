@@ -24,7 +24,7 @@ public:
     virtual void execute() = 0;
 
     // Print output either to the terminal or to a file based on redirection
-    void printOut(const std::string& str) {
+    void printOut(const std::string str) {
         int fd;
         int originalStdoutFd = -1;
 

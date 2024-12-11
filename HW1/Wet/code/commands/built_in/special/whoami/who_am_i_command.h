@@ -3,7 +3,7 @@
 
 #include <pwd.h>        // getpwuid
 #include <unistd.h>     // geteuid
-#include <iostream>     // std::cout, std::cerr
+#include <iostream>     // std::cerr
 #include "built_in/built_in_command.h"
 
 class WhoamiCommand : public BuiltInCommand {
@@ -22,7 +22,10 @@ public:
             perror("smash error: getpwuid failed");
             return;
         }
-        std::cout << pw->pw_name << " " << pw->pw_dir << std::endl;
+        printOut(pw->pw_name);
+        printOut(" ");
+        printOut(pw->pw_dir);
+        printOut(std::endl);
     }
 };
 

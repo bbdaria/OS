@@ -39,8 +39,8 @@ public:
             perror("smash error: stat failed");
             return;
         }
-
-        std::cout << m_dirPath << std::endl;
+        printOut(m_dirPath);
+        printOut(std::endl);
         listDirectory(dirFd, m_dirPath.c_str(), 1); // Start recursive listing with indentation level 1.
 
         close(dirFd);
@@ -66,9 +66,10 @@ private:
     // Helper to print the name with proper indentation
     void printWithIndent(const std::string& name, int indentLevel) {
         for (int i = 0; i < indentLevel; ++i) {
-            std::cout << "\t";
+            printOut("\t");
         }
-        std::cout << name << std::endl;
+        printOut(name);
+        printOut(std::endl);
     }
 
     // Function to list directory contents recursively

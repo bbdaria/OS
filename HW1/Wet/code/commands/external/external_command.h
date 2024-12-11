@@ -3,7 +3,6 @@
 
 #include "Commands.h"
 #include "util.cpp"
-#include <iostream> // std::cout and std::cerr
 
 class ExternalCommand : public Command {
 public:
@@ -29,7 +28,7 @@ public:
                 SmallShell& smash = SmallShell::getInstance();
                 JobsList& jobsList = smash.getJobsList();
                 jobsList.addJob(m_original_cmd_line.c_str(), pid, false);
-                std::cout << std::endl;
+                printOut(std::endl);
             }
         }
         else {

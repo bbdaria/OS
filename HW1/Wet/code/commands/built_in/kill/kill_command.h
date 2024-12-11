@@ -2,7 +2,7 @@
 #define KILL_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include <iostream> // std::cout and std::cerr
+#include <iostream> // std::cerr
 #include <cstring>  // strerror
 #include <cstdlib>  // atoi
 #include "built_in/built_in_command.h"
@@ -50,7 +50,11 @@ public:
             return;
         }
 
-        std::cout << "signal number " << m_sigNum << " was sent to pid " << pid << std::endl;
+        printOut("signal number ");
+        printOut(std::to_string(m_sigNum));
+        printOut(" was sent to pid ");
+        printOut(std::to_string(pid));
+        printOut(std::endl);
     }
 
 private:
