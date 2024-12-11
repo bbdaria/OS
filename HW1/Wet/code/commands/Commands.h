@@ -23,13 +23,6 @@ public:
 
     virtual void execute() = 0;
 
-    // Sets the file for redirection and whether it should append or overwrite
-    void setRedirectionFile(const std::string& file, bool append) {
-        m_redirectionFile = file;
-        m_redirectionAppend = append;
-        m_isRedirection = true;
-    }
-
     // Print output either to the terminal or to a file based on redirection
     void printOut(const std::string& str) {
         int fd;
@@ -79,6 +72,13 @@ private:
     bool m_isRedirection;
     std::string m_redirectionFile;
     bool m_redirectionAppend;  // True for '>>', false for '>'
+
+    // Sets the file for redirection and whether it should append or overwrite
+    void setRedirectionFile(const std::string& file, bool append) {
+        m_redirectionFile = file;
+        m_redirectionAppend = append;
+        m_isRedirection = true;
+    }
 };
 
 #endif // SMASH_COMMAND_H_
