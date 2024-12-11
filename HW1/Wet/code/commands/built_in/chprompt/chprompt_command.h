@@ -16,7 +16,6 @@ public:
     void execute() override {
         SmallShell &smash = SmallShell::getInstance();
         smash.setStartPrompt(m_prompt);
-        printOut(std::endl);
     }
 private:
     std::string m_prompt;

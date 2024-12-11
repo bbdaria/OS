@@ -32,20 +32,19 @@ public:
             return;
         }
         // this is built-in command and so will run at smash PCB
+        // update smash last-working-directory
         char *currDir = getcwd(nullptr, 0);
         SmallShell& smash = SmallShell::getInstance();
         smash.updatePlastPwd(currDir);
-        if (m_skip) {
-            printOut(std::endl);
-            return;
-        }
+
+        if (m_skip) return;
+
         if (m_dir.compare("-")) {
             m_dir = smash.plastPwd();
         }
         
         int result = chdir(m_dir.c_str());
         if (!result) perror("smash error: chdir failed");
-        else printOut(std::endl);
     }
 
 private:

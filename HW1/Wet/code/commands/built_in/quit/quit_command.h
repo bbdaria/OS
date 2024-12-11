@@ -24,7 +24,6 @@ public:
         if (m_kill_jobsList) {
             jobsList.killAllJobs(this);
         }
-        printOut(std::endl);
     }
 private:
     bool m_kill_jobsList;
