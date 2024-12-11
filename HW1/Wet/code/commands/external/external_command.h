@@ -28,7 +28,6 @@ public:
                 SmallShell& smash = SmallShell::getInstance();
                 JobsList& jobsList = smash.getJobsList();
                 jobsList.addJob(m_original_cmd_line.c_str(), pid, false);
-                printOut(std::endl);
             }
         }
         else {
