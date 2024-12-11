@@ -15,6 +15,7 @@
 #include "../built_in/quit/quit_command.h"
 #include "../built_in/kill/kill_command.h"
 
+#include "../built_in/special/listdir/listdir_command.h"
 #include "../built_in/special/whoami/who_am_i_command.h"
 
 using namespace std;
@@ -66,6 +67,9 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words) {
 		return new KillCommand(args, words);
 	}
 
+	else if (firstWord.compare("listdir") == 0) {
+		return new ListDirCommand();
+	}
 	else if (firstWord.compare("whoami") == 0) {
 		return new WhoamiCommand();
 	}
