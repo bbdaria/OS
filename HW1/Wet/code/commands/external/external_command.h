@@ -7,10 +7,8 @@
 
 class ExternalCommand : public Command {
 public:
-    ExternalCommand(char *cmd_line) : Command() {
-        m_background = _isBackgroundComamnd(cmd_line);
-        _removeBackgroundSign(cmd_line);
-        m_cmd_line = _trim(cmd_line);
+    ExternalCommand(char *original_cmd_line) : m_original_cmd_line(original_cmd_line) {
+        m_background = _isBackgroundComamnd(original_cmd_line);
     }
     ~ExternalCommand()=default;
 
@@ -30,7 +28,7 @@ public:
             else {
                 SmallShell& smash = SmallShell::getInstance();
                 JobsList& jobsList = smash.getJobsList();
-                jobsList.addJob(m_cmd_line.c_str(), pid, false);
+                jobsList.addJob(m_original_cmd_line.c_str(), pid, false);
                 std::cout << std::endl;
             }
         }
@@ -42,7 +40,7 @@ public:
     virtual void actualExecute() = 0;
 private:
     bool m_background;
-    std::string m_cmd_line;
+    std::string m_original_cmd_line;
 };
 
 #endif // EXTERNAL_COMMAND_H_
