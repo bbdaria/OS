@@ -13,6 +13,7 @@
 #include "../built_in/jobs/jobs_command.h"
 #include "../built_in/foreground/foreground_command.h"
 #include "../built_in/quit/quit_command.h"
+#include "../built_in/kill/kill_command.h"
 
 using namespace std;
 
@@ -56,6 +57,9 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words) {
 	}
 	else if (firstWord.compare("quit") == 0) {
 		return new QuitCommand(args, words);
+	}
+	else if (firstWord.compare("kill") == 0) {
+		return new KillCommand(args, words);
 	}
 	return nullptr;
 }
