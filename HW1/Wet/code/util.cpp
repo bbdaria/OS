@@ -80,11 +80,10 @@ void _removeBackgroundSign(char *cmd_line) {
 }
 
 bool _isDigitsOnly(const char* str) {
-	if (str == nullptr) return false;
-    for (size_t i = 0; i < strlen(str); ++i) {
-        if (!isdigit(static_cast<unsigned char>(str[i]))) {
-            return false; // Return false if any character is not a digit
-        }
-    }
-    return true; // All characters are digits
+	for (const char* c = str; *c != '\0'; ++c) {
+		if (!std::isdigit(*c)) {
+			return false;
+		}
+	}
+	return true;
 }

@@ -3,14 +3,26 @@
 
 #include <unistd.h> // getcwd
 #include <iostream> // std::cout and std::cerr
+#include <cstring>  // strerror
+#include <cstdlib>  // atoi
 #include "built_in/built_in_command.h"
 #include "code/smash/Smash.h"
 #include "code/joblist/joblist.h"
+#include "util.cpp"
 
 class KillCommand : public BuiltInCommand {
 public:
     KillCommand(char** args, int words) : m_error(false) {
-        if (words <= 1) {
+        if (words != 3 || args[1][0] != '-' || !_isDigitsOnly(args[1] + 1) || !_isDigitsOnly(args[2])) {
+            m_error = true;
+            m_err_msg = "smash error: kill: invalid arguments";
+            return;
+        }
+
+        m_sigNum = std::atoi(args[1] + 1); // Extract signal number (skip the '-' character)
+        m_jobId = std::atoi(args[2]);
+
+        if (m_sigNum <= 0) {
             m_error = true;
             m_err_msg = "smash error: kill: invalid arguments";
         }
@@ -22,18 +34,30 @@ public:
             std::cerr << m_err_msg << std::endl;
             return;
         }
-        SmallShell &smash = SmallShell::getInstance();
+        SmallShell& smash = SmallShell::getInstance();
         JobsList& jobsList = smash.getJobsList();
-        int jobId;
-        int sig;
 
-        JobsList::JobEntry* jobEntry = jobsList.getJobById(jobId);
-        kill(jobEntry->getPID(), sig);
-        std::cout << std::endl;
+        if (!jobsList.contains(m_jobId)) {
+            std::cerr << "smash error: kill: job-id " << m_jobId << " does not exist" << std::endl;
+            return;
+        }
+
+        JobsList::JobEntry* jobEntry = jobsList.getJobById(m_jobId);
+        int pid = jobEntry->getPID();
+
+        if (kill(pid, m_sigNum) == -1) {
+            perror("smash error: kill failed");
+            return;
+        }
+
+        std::cout << "signal number " << m_sigNum << " was sent to pid " << pid << std::endl;
     }
+
 private:
     bool m_error;
     std::string m_err_msg;
+    int m_sigNum;
+    int m_jobId;
 };
 
 #endif // KILL_COMMAND_H_
