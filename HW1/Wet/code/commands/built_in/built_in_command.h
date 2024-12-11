@@ -6,7 +6,6 @@
 class BuiltInCommand : public Command {
 public:
     BuiltInCommand()=default;
-    BuiltInCommand(const std::string& file, bool append) : Command(file, append) {}
     ~BuiltInCommand()=default;
 };
 

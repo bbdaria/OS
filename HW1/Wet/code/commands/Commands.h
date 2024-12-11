@@ -13,12 +13,15 @@
 class Command {
 public:
     Command() : m_isRedirection(false) {}
-    Command(const std::string& file, bool append) {
-        setRedirectionFile(file, append);
-    }
     virtual ~Command() = default;
 
     virtual void execute() = 0;
+
+    void setRedirectionFile(const std::string& file, bool append) {
+        m_redirectionFile = file;
+        m_redirectionAppend = append;
+        m_isRedirection = true;
+    }
 
     void printOut(const std::string& str) {
         int fd;
@@ -66,12 +69,6 @@ private:
     bool m_isRedirection;
     std::string m_redirectionFile;
     bool m_redirectionAppend; // True for '>>', false for '>'
-
-    void setRedirectionFile(const std::string& file, bool append) {
-        m_redirectionFile = file;
-        m_redirectionAppend = append;
-        m_isRedirection = true;
-    }
 };
 
 #endif // SMASH_COMMAND_H_

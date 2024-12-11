@@ -9,10 +9,6 @@ public:
     ExternalCommand(char *original_cmd_line) : m_original_cmd_line(original_cmd_line) {
         m_background = _isBackgroundComamnd(original_cmd_line);
     }
-    ExternalCommand(char *original_cmd_line, const std::string& file, bool append)
-            : Command(file, append), m_original_cmd_line(original_cmd_line) {
-        m_background = _isBackgroundComamnd(original_cmd_line);
-    }
     ~ExternalCommand()=default;
 
     void execute() {
