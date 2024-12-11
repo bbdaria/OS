@@ -111,7 +111,6 @@ public:
 
 private:
     std::vector<JobEntry> m_listOfJobs;
-    int m_numberOfJobsInList=0;
     int m_maxJobId = 0;
 };
 
