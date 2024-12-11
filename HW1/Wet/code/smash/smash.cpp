@@ -15,6 +15,8 @@
 #include "../built_in/quit/quit_command.h"
 #include "../built_in/kill/kill_command.h"
 
+#include "../built_in/special/whoami/who_am_i_command.h"
+
 using namespace std;
 
 /**
@@ -22,8 +24,10 @@ using namespace std;
 */
 Command* SmallShell::createCommand(const char *cmd_line) {
 	string cmd_s = _trim(string(cmd_line));
+	// apply alias here
+
 	char** args;
-	int words = _parseCommandLine(cmd_line, args);
+	int words = _parseCommandLine(cmd_s.c_str(), args);
 	Command* result = nullptr;
 	if (words > 0) {
 		result = _createBuiltInCommand(args, words);
@@ -61,11 +65,19 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words) {
 	else if (firstWord.compare("kill") == 0) {
 		return new KillCommand(args, words);
 	}
+
+	else if (firstWord.compare("whoami") == 0) {
+		return new WhoamiCommand();
+	}
 	return nullptr;
 }
 
 ExternalCommand* _createExternalCommand(char** args, int words) {
 	string firstWord = args[0];
+	bool isBackground = _isBackgroundComamnd();
+	if (words == 1) {
+
+	}
 	
 	// if (firstWord.compare("chprompt") == 0) {
 	// 	return new Chprompt(args, words);
