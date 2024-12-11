@@ -7,7 +7,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <dirent.h>
 #include <cstring>
 #include <string>
@@ -34,10 +33,10 @@ public:
             return;
         }
 
-        // Attempt to open the directory using system calls
-        int dirFd = open(m_dirPath.c_str(), O_RDONLY | O_DIRECTORY);
+        // Attempt to open the directory using syscall
+        int dirFd = openDirectory(m_dirPath.c_str());
         if (dirFd == -1) {
-            perror("smash error: open failed");
+            perror("smash error: stat failed");
             return;
         }
 
@@ -52,6 +51,19 @@ private:
     std::string m_err_msg;
     std::string m_dirPath;
 
+    int openDirectory(const char* dirPath) {
+        struct stat statbuf;
+        if (stat(dirPath, &statbuf) == -1 || !S_ISDIR(statbuf.st_mode)) {
+            // Return -1 if it's not a directory or stat fails
+            return -1;
+        }
+
+        // Open directory manually using syscall
+        int dirFd = syscall(SYS_open, dirPath, O_RDONLY | O_DIRECTORY);
+        return dirFd;
+    }
+
+    // Helper to print the name with proper indentation
     void printWithIndent(const std::string& name, int indentLevel) {
         for (int i = 0; i < indentLevel; ++i) {
             std::cout << "\t";
@@ -59,6 +71,7 @@ private:
         std::cout << name << std::endl;
     }
 
+    // Function to list directory contents recursively
     void listDirectory(int dirFd, const char* dirPath, int indentLevel) {
         // Buffer for reading directory entries
         char buffer[4096];
@@ -71,7 +84,6 @@ private:
         };
         ssize_t bytesRead;
 
-        // Vectors to store directories and files
         std::vector<std::string> directories;
         std::vector<std::string> files;
 
@@ -90,7 +102,7 @@ private:
                 // Full path to the entry
                 std::string fullPath = std::string(dirPath) + "/" + entry->d_name;
 
-                // Check entry type
+                // Check entry type (using stat to differentiate directories and files)
                 struct stat statbuf;
                 if (stat(fullPath.c_str(), &statbuf) == 0) {
                     if (S_ISDIR(statbuf.st_mode)) {
@@ -119,7 +131,7 @@ private:
 
             // Open directory for recursive call
             std::string newDirPath = std::string(dirPath) + "/" + dirName;
-            int newDirFd = open(newDirPath.c_str(), O_RDONLY | O_DIRECTORY);
+            int newDirFd = openDirectory(newDirPath.c_str());
             if (newDirFd != -1) {
                 listDirectory(newDirFd, newDirPath.c_str(), indentLevel + 1);
                 close(newDirFd);
