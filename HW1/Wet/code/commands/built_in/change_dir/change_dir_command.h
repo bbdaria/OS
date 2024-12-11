@@ -27,10 +27,6 @@ public:
     virtual ~ChangeDirCommand() = default;
 
     void execute() override {
-        if (m_skip) {
-            std::cout << std::endl;
-            return;
-        }
         if (m_error) {
             std::cerr << m_err_msg << std::endl;
             return;
@@ -39,7 +35,10 @@ public:
         char *currDir = getcwd(nullptr, 0);
         SmallShell& smash = SmallShell::getInstance();
         smash.updatePlastPwd(currDir);
-
+        if (m_skip) {
+            std::cout << std::endl;
+            return;
+        }
         if (m_dir.compare("-")) {
             m_dir = smash.plastPwd();
         }
