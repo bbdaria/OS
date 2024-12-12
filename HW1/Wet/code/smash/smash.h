@@ -80,14 +80,26 @@ public:
 
     std::set<std::string> getReservedWords() {
         return {
-            "quit",
-            "ls",
+            // built-in
+            "alias",
+            "unalias",
             "cd",
+            "chprompt",
+            "fg",
+            "pwd",
             "jobs",
             "kill",
-            "fg",
-            "bg",
-            "alias"
+            "quit",
+            "showpid",
+
+            // special
+            "listdir",
+            "whoami",
+            "netinfo",
+
+            // external
+            "sleep",
+            "ls",
         };
     }
 
