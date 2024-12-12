@@ -2,11 +2,14 @@
 #define NETINFO_COMMAND_H_
 
 #include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
+#include <cstring>
 #include <vector>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <net/if.h>
 #include "../../built_in_command.h"
 
 class NetinfoCommand : public BuiltInCommand {
@@ -26,110 +29,121 @@ public:
             return;
         }
 
-        try {
-            // Get network information
-            std::string ip = getIPAddress(m_interface);
-            std::string subnet = getSubnetMask(m_interface);
-            std::string gateway = getDefaultGateway();
-            std::string dns = getDNSServers();
-
-            // Print network information
-            std::cout << "IP Address: " << ip << std::endl;
-            std::cout << "Subnet Mask: " << subnet << std::endl;
-            std::cout << "Default Gateway: " << gateway << std::endl;
-            std::cout << "DNS Servers: " << dns << std::endl;
-        } catch (const std::runtime_error& e) {
-            std::cerr << "smash error: netinfo: interface " << m_interface << " does not exist" << std::endl;
+        int sock = socket(AF_INET, SOCK_DGRAM, 0);
+        if (sock < 0) {
+            perror("smash error: socket failed");
+            return;
         }
+
+        struct ifreq ifr;
+        memset(&ifr, 0, sizeof(ifr));
+        strncpy(ifr.ifr_name, m_interface.c_str(), IFNAMSIZ - 1);
+
+        // Get IP Address
+        if (ioctl(sock, SIOCGIFADDR, &ifr) < 0) {
+            std::cerr << "smash error: netinfo: interface " << m_interface << " does not exist" << std::endl;
+            close(sock);
+            return;
+        }
+        struct sockaddr_in* ipaddr = reinterpret_cast<struct sockaddr_in*>(&ifr.ifr_addr);
+        std::string ip = inet_ntoa(ipaddr->sin_addr);
+
+        // Get Subnet Mask
+        if (ioctl(sock, SIOCGIFNETMASK, &ifr) < 0) {
+            perror("smash error: ioctl failed");
+            close(sock);
+            return;
+        }
+        struct sockaddr_in* netmask = reinterpret_cast<struct sockaddr_in*>(&ifr.ifr_netmask);
+        std::string subnet = inet_ntoa(netmask->sin_addr);
+
+        // Get Default Gateway (from /proc/net/route)
+        std::string gateway = getDefaultGateway(m_interface);
+
+        // Get DNS Servers (from /etc/resolv.conf)
+        std::vector<std::string> dns_servers = getDNSServers();
+
+        // Output the results
+        std::cout << "IP Address: " << ip << std::endl;
+        std::cout << "Subnet Mask: " << subnet << std::endl;
+        std::cout << "Default Gateway: " << gateway << std::endl;
+        std::cout << "DNS Servers: ";
+        for (size_t i = 0; i < dns_servers.size(); ++i) {
+            std::cout << dns_servers[i];
+            if (i < dns_servers.size() - 1) std::cout << ", ";
+        }
+        std::cout << std::endl;
+
+        close(sock);
     }
 
 private:
-    std::string m_interface;
     bool m_error;
     std::string m_err_msg;
+    std::string m_interface;
 
-    std::string getIPAddress(const std::string& interface) {
-        std::ifstream file("/proc/net/fib_trie");
-        if (!file.is_open()) {
-            throw std::runtime_error("Failed to open network info file");
+    std::string getDefaultGateway(const std::string& interface) {
+        int fd = open("/proc/net/route", O_RDONLY);
+        if (fd < 0) {
+            perror("smash error: open failed");            
+            return "";
         }
 
+        char buffer[4096];
+        ssize_t bytes_read = read(fd, buffer, sizeof(buffer) - 1);
+        close(fd);
+        if (bytes_read <= 0) {
+            perror("smash error: read failed");            
+            return "";
+        }
+
+        buffer[bytes_read] = '\0';
+        std::istringstream stream(buffer);
         std::string line;
-        std::string ip;
-        while (std::getline(file, line)) {
-            if (line.find(interface) != std::string::npos) {
-                while (std::getline(file, line)) {
-                    if (line.find("32 host") != std::string::npos) {
-                        std::istringstream iss(line);
-                        iss >> ip;
-                        return ip;
-                    }
-                }
+        while (std::getline(stream, line)) {
+            std::istringstream line_stream(line);
+            std::string iface, destination, gateway;
+            line_stream >> iface >> destination >> gateway;
+            if (iface == interface && destination == "00000000") {
+                unsigned int gw;
+                std::stringstream ss;
+                ss << std::hex << gateway;
+                ss >> gw;
+                struct in_addr gw_addr = {gw};
+                return inet_ntoa(gw_addr);
             }
         }
-
-        throw std::runtime_error("Interface not found");
+        return "";
     }
 
-    std::string getSubnetMask(const std::string& interface) {
-        // You can parse this information from system files or use external tools like `ifconfig`.
-        // Placeholder implementation:
-        return "255.255.255.0";
-    }
-
-    std::string getDefaultGateway() {
-        std::ifstream file("/proc/net/route");
-        if (!file.is_open()) {
-            throw std::runtime_error("Failed to open routing table");
+    std::vector<std::string> getDNSServers() {
+        int fd = open("/etc/resolv.conf", O_RDONLY);
+        if (fd < 0) {
+            perror("smash error: open failed");            
+            return {};
         }
 
+        char buffer[4096];
+        ssize_t bytes_read = read(fd, buffer, sizeof(buffer) - 1);
+        close(fd);
+        if (bytes_read <= 0) {
+            perror("smash error: read failed");            
+            return {};
+        }
+
+        buffer[bytes_read] = '\0';
+        std::istringstream stream(buffer);
         std::string line;
-        while (std::getline(file, line)) {
-            std::istringstream iss(line);
-            std::string iface, dest, gateway;
-            if (iss >> iface >> dest >> gateway) {
-                if (dest == "00000000") {
-                    unsigned long gw;
-                    std::stringstream ss;
-                    ss << std::hex << gateway;
-                    ss >> gw;
-
-                    return std::to_string((gw & 0xFF)) + "." +
-                           std::to_string((gw >> 8) & 0xFF) + "." +
-                           std::to_string((gw >> 16) & 0xFF) + "." +
-                           std::to_string((gw >> 24) & 0xFF);
-                }
-            }
-        }
-
-        throw std::runtime_error("Default gateway not found");
-    }
-
-    std::string getDNSServers() {
-        std::ifstream file("/etc/resolv.conf");
-        if (!file.is_open()) {
-            throw std::runtime_error("Failed to open DNS configuration");
-        }
-
-        std::string line;
-        std::vector<std::string> dnsServers;
-        while (std::getline(file, line)) {
+        std::vector<std::string> dns_servers;
+        while (std::getline(stream, line)) {
             if (line.find("nameserver") == 0) {
-                dnsServers.push_back(line.substr(11)); // Skip "nameserver "
+                std::istringstream line_stream(line);
+                std::string ignore, address;
+                line_stream >> ignore >> address;
+                dns_servers.push_back(address);
             }
         }
-
-        if (dnsServers.empty()) {
-            throw std::runtime_error("No DNS servers found");
-        }
-
-        std::ostringstream oss;
-        for (size_t i = 0; i < dnsServers.size(); ++i) {
-            if (i > 0) oss << ", ";
-            oss << dnsServers[i];
-        }
-
-        return oss.str();
+        return dns_servers;
     }
 };
 
