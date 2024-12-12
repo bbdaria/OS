@@ -19,7 +19,7 @@ private:
     std::string m_start_prompt = DEFAULT_START_PROMPT;
     char **m_plastPwd = nullptr;
     bool m_quitCalled = false;
-    std::map<std::string, std::string> m_aliases;
+    std::map<std::string, std::pair<std::string,char>> m_aliases;
 
 public:
     SmallShell(SmallShell const &) = delete; // disable copy ctor
@@ -91,7 +91,7 @@ public:
         };
     }
 
-    std::map<std::string, std::string>& getAliases() {
+    std::map<std::string, std::pair<std::string,char>>& getAliases() {
         return m_aliases;
     }
 };
