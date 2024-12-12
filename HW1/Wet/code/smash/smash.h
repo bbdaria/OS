@@ -32,7 +32,7 @@ public:
         return instance;
     }
 
-    Command* createCommand(const char *cmd_line);
+    Command* createCommand(const char *original_cmd_line, std::string& cmd_s);
     void executeCommand(const char *cmd_line);
 
     void setStartPrompt(std::string& s) {
