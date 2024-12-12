@@ -94,8 +94,8 @@ public:
 
             // special
             "listdir",
-            "whoami",
             "netinfo",
+            "whoami",
 
             // external
             "sleep",
