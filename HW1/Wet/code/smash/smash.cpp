@@ -21,8 +21,8 @@
 /**
 * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
 */
-Command* SmallShell::createCommand(const char *cmd_line) {
-	std::string cmd_s = _trim(string(cmd_line));
+Command* SmallShell::createCommand(const char *original_cmd_line) {
+	std::string cmd_s = _trim(string(original_cmd_line));
 	// apply alias here
 
 	char** args;
@@ -30,7 +30,7 @@ Command* SmallShell::createCommand(const char *cmd_line) {
 	Command* result = nullptr;
 	if (words > 0) {
 		result = _createBuiltInCommand(args, words);
-		result = (result!=nullptr ? result : _createExternalCommand(args, words));
+		result = (result!=nullptr ? result : _createExternalCommand(original_cmd_line, args, words));
 	}
 	_freeArgs(args, words);
 	return result;
@@ -74,16 +74,13 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words) {
 	return nullptr;
 }
 
-ExternalCommand* _createExternalCommand(char** args, int words) {
-	std::string firstWord = args[0];
-	bool isBackground = _isBackgroundComamnd();
-	if (words == 1) {
-
+ExternalCommand* _createExternalCommand(char *original_cmd_line, char** args, int words) {
+	bool background = _isBackgroundComamnd(original_cmd_line);
+	if (ExternalCommand::isComplexCommand(original_cmd_line)) {
+		return new ComplexExternalCommand(original_cmd_line);
+	} else {
+		return new SimpleExternalCommand(original_cmd_line);
 	}
-	
-	// if (firstWord.compare("chprompt") == 0) {
-	// 	return new Chprompt(args, words);
-	// }
 	return nullptr;
 }
 

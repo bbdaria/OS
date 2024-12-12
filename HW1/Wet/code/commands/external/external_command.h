@@ -11,6 +11,10 @@ public:
     }
     ~ExternalCommand()=default;
 
+    static bool isComplexCommand(const std::string& cmdLine) {
+        return cmdLine.find('*') != std::string::npos || cmdLine.find('?') != std::string::npos;
+    }
+
     void execute() {
         if (m_background) {
             int pid = fork();
@@ -38,6 +42,7 @@ public:
     virtual void actualExecute() = 0;
 private:
     bool m_background;
+protected:
     std::string m_original_cmd_line;
 };
 
