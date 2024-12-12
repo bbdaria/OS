@@ -2,6 +2,8 @@
 #define SMASH_H_
 
 #include <iostream>
+#include <set>
+#include <map>
 #include "code/commands/Commands.h"
 #include "code/joblist/joblist.h"
 
@@ -17,6 +19,7 @@ private:
     std::string m_start_prompt = DEFAULT_START_PROMPT;
     char **m_plastPwd = nullptr;
     bool m_quitCalled = false;
+    std::map<std::string, std::string> m_aliases;
 
 public:
     SmallShell(SmallShell const &) = delete; // disable copy ctor
@@ -73,6 +76,23 @@ public:
             executeCommand(cmd_line.c_str());
             setForeGround(nullptr);
         }
+    }
+
+    std::set<std::string> getReservedWords() {
+        return {
+            "quit",
+            "ls",
+            "cd",
+            "jobs",
+            "kill",
+            "fg",
+            "bg",
+            "alias"
+        };
+    }
+
+    std::map<std::string, std::string>& getAliases() {
+        return m_aliases;
     }
 };
 
