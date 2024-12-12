@@ -6,7 +6,8 @@
 
 class ExternalCommand : public Command {
 public:
-    ExternalCommand(char *original_cmd_line) : m_original_cmd_line(original_cmd_line) {
+    ExternalCommand(char *original_cmd_line, std::string& cmd_line)
+            : m_original_cmd_line(original_cmd_line), m_cmd_line(cmd_line) {
         m_background = _isBackgroundComamnd(original_cmd_line);
     }
     ~ExternalCommand()=default;
@@ -42,8 +43,9 @@ public:
     virtual void actualExecute() = 0;
 private:
     bool m_background;
-protected:
     std::string m_original_cmd_line;
+protected:
+    std::string m_cmd_line;
 };
 
 #endif // EXTERNAL_COMMAND_H_

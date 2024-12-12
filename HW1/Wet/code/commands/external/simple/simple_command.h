@@ -6,7 +6,8 @@
 
 class SimpleExternalCommand : public ExternalCommand {
 public:
-    SimpleExternalCommand(char *original_cmd_line) : ExternalCommand(original_cmd_line) {}
+    SimpleExternalCommand(char *original_cmd_line, std::string& cmd_line)
+        : ExternalCommand(original_cmd_line, cmd_line) {}
 
     void actualExecute() override {
         int pid = fork();
@@ -19,7 +20,7 @@ public:
 
             // Parse command and arguments
             char* args[COMMAND_MAX_ARGS + 1] = {nullptr};
-            char* cmdCStr = strdup(m_original_cmd_line.c_str());
+            char* cmdCStr = strdup(m_cmd_line.c_str());
             int numArgs = _parseCommandLine(cmdCStr, args);
             if (numArgs < 0) {
                 perror("smash error: parsing command line failed");

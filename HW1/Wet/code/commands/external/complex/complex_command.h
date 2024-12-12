@@ -6,7 +6,8 @@
 
 class ComplexExternalCommand : public ExternalCommand {
 public:
-    ComplexExternalCommand(char *original_cmd_line) : ExternalCommand(original_cmd_line) {}
+    ComplexExternalCommand(char *original_cmd_line, std::string& cmd_line)
+        : ExternalCommand(original_cmd_line, cmd_line) {}
 
     void actualExecute() override {
         int pid = fork();
@@ -21,7 +22,7 @@ public:
             char* args[] = {
                 const_cast<char*>("/bin/bash"),
                 const_cast<char*>("-c"),
-                const_cast<char*>(m_original_cmd_line.c_str()),
+                const_cast<char*>(m_cmd_line.c_str()),
                 nullptr
             };
 
