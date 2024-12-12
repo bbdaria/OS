@@ -17,6 +17,7 @@
 #include "../built_in/alias/alias_command.h"
 #include "../built_in/alias/unalias_command.h"
 #include "../built_in/special/listdir/listdir_command.h"
+#include "../built_in/special/net_info/net_info_command.h"
 #include "../built_in/special/whoami/who_am_i_command.h"
 
 /**
@@ -71,6 +72,9 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words, char* original_com
 
 	else if (firstWord.compare("listdir") == 0) {
 		return new ListDirCommand();
+	}
+	else if (firstWord.compare("netinfo") == 0) {
+		return new NetInfoCommand();
 	}
 	else if (firstWord.compare("whoami") == 0) {
 		return new WhoamiCommand();
