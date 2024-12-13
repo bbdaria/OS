@@ -9,7 +9,10 @@
 
 class UnaliasCommand : public BuiltInCommand {
 public:
-    UnaliasCommand(char** args, int words) : m_error(false) {
+    UnaliasCommand(const char* original_cmd_line) : m_error(false) {
+        char** args = (char**) malloc(sizeof(char*) * 20);  // Assuming a maximum of 20 arguments
+        std::string cmd_s = _trim(original_cmd_line);
+        int words = _parseCommandLine(cmd_s.c_str(), args);
         if (words <= 1) {
             m_err_msg = "smash error: unalias: not enough arguments";
             m_error = true;
@@ -18,6 +21,7 @@ public:
                 m_names.emplace_back(args[i]);
             }
         }
+        _freeArgs(args, words);
     }
 
     void execute() override {

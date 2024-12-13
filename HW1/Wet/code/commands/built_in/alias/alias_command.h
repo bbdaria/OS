@@ -13,10 +13,10 @@ public:
 
     void execute() override {
         std::string cmd_s(m_cmd_line);
-
         if (_trim(cmd_s).compare("alias") == 0) {
             // print alias list
-            auto& aliases = SmallShell::getInstance().getAliases();
+            SmallShell& smash = SmallShell::getInstance();
+            std::map<std::string, std::pair<std::string,char>>& aliases = smash.getAliases();
             for (const auto &alias : aliases) {
                 std::string name = alias.first;
                 std::pair<std::string,char> val = alias.second;
@@ -64,17 +64,15 @@ private:
     }
 
     static bool isValidAliasFormat(const std::string &cmdStr, std::string& name, std::string& command, char& quotationMarks) {
-        std::regex aliasRegex("^alias  [a-zA-Z0-9_]+='[^']*'$", std::regex::extended);
+        std::regex aliasRegex(R"(^alias\s+([a-zA-Z0-9_]+)=(['`])(.*)\2$)");
         std::smatch match;
 
         if (std::regex_match(cmdStr, match, aliasRegex)) {
+            // captured groups: name, quotation marks, and command
             name = match[1];
-            command = match[2];
-
-            // alias <name>= and then ' or ` or ` or ’...
-            std::size_t namePos = cmdStr.find(name);
-
-            quotationMarks = cmdStr.at(namePos+name.size()+1);
+            std::string quotationMarkStr = match[2];
+            quotationMarks = quotationMarkStr.at(0);
+            command = match[3];
             return true;
         }
         return false;

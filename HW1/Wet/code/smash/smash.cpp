@@ -60,7 +60,7 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words, const char* origin
 		return new AliasCommand(original_command);
 	}
 	else if (firstWord.compare("unalias") == 0) {
-		return new UnaliasCommand(args, words);
+		return new UnaliasCommand(original_command);
 	}
 	else if (firstWord.compare("listdir") == 0) {
 		return new ListDirCommand(args, words);
@@ -120,15 +120,22 @@ void _redirectIO(Command* cmd, const char *cmd_line) {
 std::string SmallShell::applyAlias(const std::string& cmd_line) {
     std::string cmd_s = cmd_line;
     std::map<std::string, AliasVal>& alias = getAliases();
-    for (std::map<std::string, AliasVal>::iterator it = alias.begin(); it != alias.end(); ++it) {
-		const std::string& key = it->first;
-		const std::pair<std::string, char>& value = it->second;
-		size_t pos = cmd_s.find(key);
-		while (pos != std::string::npos) {
-			cmd_s.replace(pos, key.length(), value.first);  // Replace alias with its value
-			pos = cmd_s.find(key, pos + value.first.length());
-		}
-	}
+    for (auto it = alias.begin(); it != alias.end(); ++it) {
+        const std::string& key = it->first;
+        const std::pair<std::string, char>& value = it->second;
+
+        size_t pos = cmd_s.find(key, 0);
+		bool done = false;
+        while (pos != std::string::npos && !done) {
+            // Check if replacing will reintroduce the key (self-replacement).
+            if (value.first.find(key) != std::string::npos) {
+				done = true;
+				continue;
+            }
+            cmd_s.replace(pos, key.length(), value.first);
+            pos = cmd_s.find(key, pos + value.first.length());
+        }
+    }
     return cmd_s;
 }
 
