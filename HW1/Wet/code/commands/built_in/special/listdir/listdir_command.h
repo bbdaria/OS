@@ -93,13 +93,12 @@ private:
             while (ptr < buffer + bytesRead) {
                 linux_dirent64* entry = (linux_dirent64*)ptr;
 
-                // Skip "." and ".."
+                // skip "." and ".."
                 if (std::strcmp(entry->d_name, ".") == 0 || std::strcmp(entry->d_name, "..") == 0) {
                     ptr += entry->d_reclen;
                     continue;
                 }
-
-                // Full path to the entry
+                
                 std::string fullPath = std::string(dirPath) + "/" + entry->d_name;
 
                 // using stat to differentiate directories and files
