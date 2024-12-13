@@ -5,7 +5,7 @@ COMPILER_FLAGS := --std=c++11 -Wall -Icode
 CODE_DIR := code
 SRCS := $(CODE_DIR)/main.cpp $(CODE_DIR)/util.cpp $(CODE_DIR)/signals/signals.cpp $(CODE_DIR)/smash/smash.cpp
 OBJS := $(SRCS:.cpp=.o)
-HDRS := $(shell find -name '*.h')  # Dynamically find all .h files
+HDRS := $(shell find $(CODE_DIR) -name '*.h')  # Dynamically find all .h files
 TESTS_INPUTS := $(wildcard tests/test_input*.txt)
 TESTS_OUTPUTS := $(subst input,output,$(TESTS_INPUTS))
 SMASH_BIN := smash
