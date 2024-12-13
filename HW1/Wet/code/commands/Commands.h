@@ -12,7 +12,7 @@
 
 class Command {
 public:
-    Command() : m_isRedirection(false) {}
+    Command() : m_isRedirection(false), m_errPipe(false), m_outPipe(false) {}
     virtual ~Command() = default;
 
     virtual void execute() = 0;
@@ -23,7 +23,21 @@ public:
         m_isRedirection = true;
     }
 
+    void setPipeOut() {
+        m_outPipe = true;
+        m_errPipe = false;
+    }
+
+    void setPipeErr() {
+        m_outPipe = false;
+        m_errPipe = true;
+    }
+
     void printOut(const std::string& str) {
+        if (m_outPipe) {
+            m_pipeStr.append(str);
+            return;
+        }
         int fd;
         int originalStdoutFd = -1;
 
@@ -65,10 +79,26 @@ public:
         }
     }
 
+    void printErr(const std::string& str) {
+        if (m_errPipe) {
+            m_pipeStr.append(str);
+            return;
+        }
+        std::cerr << str;
+    }
+
+    std::string getPipeStr() {
+        return m_pipeStr;
+    }
+
 private:
     bool m_isRedirection;
     std::string m_redirectionFile;
     bool m_redirectionAppend; // True for '>>', false for '>'
+
+    bool m_errPipe;
+    bool m_outPipe;
+    std::string m_pipeStr;
 };
 
 #endif // SMASH_COMMAND_H_

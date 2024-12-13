@@ -2,7 +2,6 @@
 #define GET_CURRENT_DIR_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include <iostream> // std::cerr
 #include "built_in/built_in_command.h"
 
 class GetCurrDirCommand : public BuiltInCommand {

@@ -2,7 +2,6 @@
 #define FOREGROUND_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include <iostream> // std::cerr
 #include <sys/wait.h>
 #include "built_in/built_in_command.h"
 #include "code/smash/Smash.h"
@@ -44,7 +43,8 @@ public:
 
     void execute() override {
         if (m_error) {
-            std::cerr << m_err_msg << std::endl;
+            printErr(m_err_msg);
+            printErr(std::endl);
             return;
         }
         SmallShell &smash = SmallShell::getInstance();

@@ -29,7 +29,8 @@ public:
 
     void execute() override {
         if (m_error) {
-            std::cerr << m_err_msg << std::endl;
+            printErr(m_err_msg);
+            printErr(std::endl);
             return;
         }
 

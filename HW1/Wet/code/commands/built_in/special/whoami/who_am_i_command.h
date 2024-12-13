@@ -3,7 +3,6 @@
 
 #include <pwd.h>        // getpwuid
 #include <unistd.h>     // geteuid
-#include <iostream>     // std::cerr
 #include "built_in/built_in_command.h"
 
 class WhoamiCommand : public BuiltInCommand {

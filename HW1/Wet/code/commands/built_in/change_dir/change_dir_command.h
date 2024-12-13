@@ -3,7 +3,6 @@
 
 #include "built_in/built_in_command.h"
 #include <unistd.h> // getcwd
-#include <iostream> // std::cerr
 
 class ChangeDirCommand : public BuiltInCommand {
 public:
@@ -28,7 +27,8 @@ public:
 
     void execute() override {
         if (m_error) {
-            std::cerr << m_err_msg << std::endl;
+            printErr(m_err_msg);
+            printErr(std::endl);
             return;
         }
         // this is built-in command and so will run at smash PCB

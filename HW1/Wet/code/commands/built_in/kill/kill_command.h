@@ -2,7 +2,6 @@
 #define KILL_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include <iostream> // std::cerr
 #include <cstring>  // strerror
 #include <cstdlib>  // atoi
 #include "built_in/built_in_command.h"
@@ -31,14 +30,18 @@ public:
 
     void execute() override {
         if (m_error) {
-            std::cerr << m_err_msg << std::endl;
+            printErr(m_err_msg);
+            printErr(std::endl);
             return;
         }
         SmallShell& smash = SmallShell::getInstance();
         JobsList& jobsList = smash.getJobsList();
 
         if (!jobsList.contains(m_jobId)) {
-            std::cerr << "smash error: kill: job-id " << m_jobId << " does not exist" << std::endl;
+            printErr("smash error: kill: job-id ");
+            printErr(std::to_string(m_jobId));
+            printErr(" does not exist");
+            printErr(std::endl);
             return;
         }
 

@@ -35,14 +35,18 @@ public:
         char quotationMarks;
         bool validFormat = isValidAliasFormat(cmd_s, name, command, &quotationMarks);
         if (!validFormat) {
-            std::cerr << "smash error: alias: invalid alias format" << std::endl;
+            printErr("smash error: alias: invalid alias format");
+            printErr(std::endl);
             return;
         }
         else {
             // Validate and add alias
             auto& aliases = SmallShell::getInstance().getAliases();
             if (isReservedCommand(name) || aliases.find(name) != aliases.end()) {
-                std::cerr << "smash error: alias: " << name << " already exists or is a reserved command" << std::endl;
+                printErr("smash error: alias: ");
+                printErr(name);
+                printErr(" already exists or is a reserved command");
+                printErr(std::endl);
                 return;
             }
             // Add alias
