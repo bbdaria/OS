@@ -2,9 +2,9 @@
 #define QUIT_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include "built_in/built_in_command.h"
-#include "code/smash/Smash.h"
-#include "code/joblist/joblist.h"
+#include "../built_in_command.h"
+#include "smash/smash.h"
+#include "joblist/joblist.h"
 
 class QuitCommand : public BuiltInCommand {
 public:
@@ -22,6 +22,12 @@ public:
         SmallShell &smash = SmallShell::getInstance();
         JobsList& jobsList = smash.getJobsList();
         if (m_kill_jobsList) {
+            SmallShell& smash = SmallShell::getInstance();
+            printOut(smash.getStartPrompt());
+            printOut(": sending SIGKILL signal to ");
+            printOut(std::to_string(jobsList.size()));
+            printOut(" jobs:");
+            printOut("\n");
             jobsList.killAllJobs(this);
         }
     }

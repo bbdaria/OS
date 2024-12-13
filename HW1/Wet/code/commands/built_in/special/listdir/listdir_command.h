@@ -10,7 +10,7 @@
 #include <dirent.h>
 #include <cstring>
 #include <string>
-#include "built_in/built_in_command.h"
+#include "../../built_in_command.h"
 
 class ListDirCommand : public BuiltInCommand {
 public:

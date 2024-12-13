@@ -1,8 +1,8 @@
 #include <iostream>
 #include <signal.h>
 #include "signals.h"
-#include "Commands.h"
-#include "smash/Smash.h"
+#include "commands/Commands.h"
+#include "smash/smash.h"
 
 using namespace std;
 

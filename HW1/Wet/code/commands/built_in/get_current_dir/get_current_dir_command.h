@@ -2,7 +2,7 @@
 #define GET_CURRENT_DIR_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include "built_in/built_in_command.h"
+#include "../built_in_command.h"
 
 class GetCurrDirCommand : public BuiltInCommand {
 public:

@@ -1,8 +1,8 @@
 #ifndef CHPROMPT_COMMAND_H_
 #define CHPROMPT_COMMAND_H_
 
-#include "built_in/built_in_command.h"
-#include "code/smash/smash.h"
+#include "../built_in_command.h"
+#include "smash/smash.h"
 
 class Chprompt : public BuiltInCommand {
 public:

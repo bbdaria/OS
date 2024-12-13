@@ -1,7 +1,7 @@
 #ifndef BUILT_IN_COMMAND_H_
 #define BUILT_IN_COMMAND_H_
 
-#include "Commands.h"
+#include "commands/Commands.h"
 
 class BuiltInCommand : public Command {
 public:

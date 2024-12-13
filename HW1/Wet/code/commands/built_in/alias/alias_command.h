@@ -5,7 +5,7 @@
 #include <regex>
 #include <string>
 #include "../built_in_command.h"
-#include "smash/Smash.h"
+#include "smash/smash.h"
 
 class AliasCommand : public BuiltInCommand {
 public:

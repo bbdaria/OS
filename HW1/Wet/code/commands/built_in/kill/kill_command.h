@@ -4,10 +4,10 @@
 #include <unistd.h> // getcwd
 #include <cstring>  // strerror
 #include <cstdlib>  // atoi
-#include "built_in/built_in_command.h"
-#include "code/smash/Smash.h"
-#include "code/joblist/joblist.h"
-#include "util.cpp"
+#include "../built_in_command.h"
+#include "smash/smash.h"
+#include "joblist/joblist.h"
+#include "util.h"
 
 class KillCommand : public BuiltInCommand {
 public:

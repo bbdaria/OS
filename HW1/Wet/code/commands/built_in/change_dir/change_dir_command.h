@@ -1,7 +1,7 @@
 #ifndef CHANGE_DIR_COMMAND_H_
 #define CHANGE_DIR_COMMAND_H_
 
-#include "built_in/built_in_command.h"
+#include "../built_in_command.h"
 #include <unistd.h> // getcwd
 
 class ChangeDirCommand : public BuiltInCommand {

@@ -3,9 +3,9 @@
 
 #include <unistd.h> // getcwd
 #include <sys/wait.h>
-#include "built_in/built_in_command.h"
-#include "code/smash/Smash.h"
-#include "code/joblist/joblist.h"
+#include "../built_in_command.h"
+#include "smash/smash.h"
+#include "joblist/joblist.h"
 
 class ForegroundCommand : public BuiltInCommand {
 public:
@@ -58,7 +58,7 @@ public:
         printOut(" ");
         printOut(std::to_string(fgPID));
 
-        if (waitpid(fgPID, nullptr) == -1) {
+        if (waitpid(fgPID, nullptr, 0) == -1) {
             perror("smash error: waitpid failed");
             return;
         }

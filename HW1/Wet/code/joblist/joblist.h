@@ -2,6 +2,9 @@
 #define JOBSLIST_H_
 
 #include <vector>
+#include <sys/wait.h>
+
+#include "smash/smash.h"
 #include "commands/Commands.h"
 
 class JobsList {
@@ -50,6 +53,10 @@ public:
         return m_maxJobId;
     }
 
+    int size() {
+        return m_listOfJobs.size();
+    }
+
     void addJob(const char* cmd, int pid, bool isStopped = false) {
         removeFinishedJobs(); // removing finished jobs before adding
 
@@ -67,11 +74,6 @@ public:
     }
 
     void killAllJobs(Command* command) {
-        command->printOut(SmallShell::getInstance().getStartPrompt());
-        command->printOut(": sending SIGKILL signal to ");
-        command->printOut(std::to_string(m_listOfJobs.size()));
-        command->printOut(" jobs:");
-        command->printOut("\n");
         for (JobEntry& jobEntry : m_listOfJobs) {
             int pid = jobEntry.getPID();
             kill(pid, SIGKILL);

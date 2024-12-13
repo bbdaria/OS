@@ -1,10 +1,10 @@
 #ifndef PIPE_COMMAND_H_
 #define PIPE_COMMAND_H_
 
-#include "../external/external_command.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include "../../external_command.h"
 
 class PipeCommand : public ExternalCommand {
 public:

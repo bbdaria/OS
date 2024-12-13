@@ -1,8 +1,8 @@
 #ifndef SIMPLE_EXTERNAL_COMMAND_H_
 #define SIMPLE_EXTERNAL_COMMAND_H_
 
-#include "../external/external_command.h"
-#include "util.cpp"
+#include "../external_command.h"
+#include "util.h"
 
 class SimpleExternalCommand : public ExternalCommand {
 public:

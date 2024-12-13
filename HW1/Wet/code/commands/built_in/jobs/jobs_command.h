@@ -2,9 +2,9 @@
 #define JOBS_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include "built_in/built_in_command.h"
-#include "code/smash/Smash.h"
-#include "code/joblist/joblist.h"
+#include "../built_in_command.h"
+#include "smash/smash.h"
+#include "joblist/joblist.h"
 
 class JobsCommand : public BuiltInCommand {
 public:

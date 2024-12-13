@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "../built_in_command.h"
-#include "smash/Smash.h"
+#include "smash/smash.h"
 
 class UnaliasCommand : public BuiltInCommand {
 public:
