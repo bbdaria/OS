@@ -33,6 +33,10 @@ public:
         m_errPipe = true;
     }
 
+    void printOut(char chr) {
+        std::string str(1, chr);
+        printOut(str);
+    }
     void printOut(const std::string& str) {
         if (m_outPipe) {
             m_pipeStr.append(str);

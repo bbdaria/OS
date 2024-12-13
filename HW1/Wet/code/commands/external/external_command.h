@@ -7,7 +7,7 @@
 
 class ExternalCommand : public Command {
 public:
-    ExternalCommand(char *original_cmd_line, std::string& cmd_line)
+    ExternalCommand(const char *original_cmd_line, std::string& cmd_line)
             : m_original_cmd_line(original_cmd_line), m_cmd_line(cmd_line) {
         m_background = _isBackgroundComamnd(original_cmd_line);
     }

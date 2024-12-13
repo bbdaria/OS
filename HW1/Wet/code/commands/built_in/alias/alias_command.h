@@ -9,7 +9,7 @@
 
 class AliasCommand : public BuiltInCommand {
 public:
-    AliasCommand(char *cmd_line) : m_cmd_line(cmd_line) {}
+    AliasCommand(const char *cmd_line) : m_cmd_line(cmd_line) {}
 
     void execute() override {
         std::string cmd_s(m_cmd_line);
@@ -33,7 +33,7 @@ public:
         std::string name;
         std::string command;
         char quotationMarks;
-        bool validFormat = isValidAliasFormat(cmd_s, name, command, &quotationMarks);
+        bool validFormat = isValidAliasFormat(cmd_s, name, command, quotationMarks);
         if (!validFormat) {
             printErr("smash error: alias: invalid alias format");
             printErr("\n");
@@ -55,6 +55,8 @@ public:
     }
 
 private:
+    std::string m_cmd_line;
+
     bool isReservedCommand(const std::string &name) {
         // List of reserved commands
         auto reserved = SmallShell::getInstance().getReservedWords();

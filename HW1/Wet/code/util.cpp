@@ -36,9 +36,9 @@ int _parseCommandLine(const char *cmd_line, char **args)
 void _freeArgs(char **args, int words)
 {
     for (int i = 0; i < words; ++i) {
-		delete args[i];
+		free(args[i]);
 	}
-	delete args;
+	free(args);
 }
 
 bool _isBackgroundComamnd(const char *cmd_line)

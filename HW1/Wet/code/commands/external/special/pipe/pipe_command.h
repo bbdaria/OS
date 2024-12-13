@@ -8,7 +8,7 @@
 
 class PipeCommand : public ExternalCommand {
 public:
-    PipeCommand(char *original_cmd_line, std::string& cmd_line)
+    PipeCommand(const char *original_cmd_line, std::string& cmd_line)
         : ExternalCommand(original_cmd_line, cmd_line) {
 
         // Split the command line into two parts: before and after the pipe
@@ -25,8 +25,11 @@ public:
     }
 
     void actualExecute() override {
+        SmallShell& smash = SmallShell::getInstance();
+
         // Create the two commands from the left and right parts of the pipe
-        Command* leftCmd = SmallShell::createCommand(m_leftCmdLine);
+        std::string leftTrimmed = _trim(m_leftCmdLine);
+        Command* leftCmd = smash.createCommand(m_leftCmdLine.c_str(), leftTrimmed);
 
         if (m_isErrPipe) {
             leftCmd->setPipeErr();
@@ -36,8 +39,11 @@ public:
         }
         leftCmd->execute();
 
+        m_rightCmdLine.append(" ");
         m_rightCmdLine.append(leftCmd->getPipeStr());
-        Command* rightCmd = SmallShell::createCommand(m_rightCmdLine);
+
+        std::string rightTrimmed = _trim(m_rightCmdLine);
+        Command* rightCmd = smash.createCommand(m_rightCmdLine.c_str(), rightTrimmed);
         rightCmd->execute();
     }
 

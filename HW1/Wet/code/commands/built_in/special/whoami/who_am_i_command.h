@@ -68,7 +68,7 @@ private:
         std::string uidStr = line.substr(pos, nextPos - pos);
 
         // Convert uidStr to an integer and compare with current process uid
-        if (std::stoi(uidStr) == uid) {
+        if (std::stoi(uidStr) == static_cast<int>(uid)) {
             // Get the home directory
             pos = nextPos + 1;
             nextPos = line.find(':', pos);

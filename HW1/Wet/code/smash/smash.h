@@ -12,14 +12,16 @@ private:
     SmallShell() =default;
     ~SmallShell()=default;
 
-    static const std::string DEFAULT_START_PROMPT;
-
+    const std::string DEFAULT_START_PROMPT = "smash";
+    
     JobsList::JobEntry* m_forground = nullptr;
     JobsList m_jobsList;
     std::string m_start_prompt = DEFAULT_START_PROMPT;
     char **m_plastPwd = nullptr;
     bool m_quitCalled = false;
     std::map<std::string, std::pair<std::string,char>> m_aliases;
+
+    std::string applyAlias(const std::string& cmd_line);
 
 public:
     SmallShell(SmallShell const &) = delete; // disable copy ctor
@@ -103,11 +105,11 @@ public:
         };
     }
 
-    std::map<std::string, std::pair<std::string,char>>& getAliases() {
+    typedef std::pair<std::string, char> AliasVal;
+
+    std::map<std::string, AliasVal>& getAliases() {
         return m_aliases;
     }
 };
-
-const std::string SmallShell::DEFAULT_START_PROMPT = "smash";
 
 #endif //SMASH_H_

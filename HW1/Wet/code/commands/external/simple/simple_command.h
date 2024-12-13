@@ -6,7 +6,7 @@
 
 class SimpleExternalCommand : public ExternalCommand {
 public:
-    SimpleExternalCommand(char *original_cmd_line, std::string& cmd_line)
+    SimpleExternalCommand(const char *original_cmd_line, std::string& cmd_line)
         : ExternalCommand(original_cmd_line, cmd_line) {}
 
     void actualExecute() override {
