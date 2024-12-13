@@ -20,10 +20,19 @@
 #include "../built_in/special/net_info/net_info_command.h"
 #include "../built_in/special/whoami/who_am_i_command.h"
 
+#include "../external/external_command.h"
+#include "../external/simple/simple_command.h"
+#include "../external/complex/complex_command.h"
+#include "../external/special/pipe/pipe_command.h"
+
 /**
 * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
 */
 Command* SmallShell::createCommand(const char *original_cmd_line, std::string& cmd_s) {
+	if (cmd_s.find('|') != std::string::npos || cmd_s.find("|&") != std::string::npos) {
+        // If it contains a pipe, create a PipeCommand
+        return new PipeCommand(cmd_s);
+    }
 	char** args;
 	int words = _parseCommandLine(cmd_s.c_str(), args);
 	Command* result = nullptr;
@@ -69,7 +78,6 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words, char* original_com
 	else if (firstWord.compare("unalias") == 0) {
 		return new UnaliasCommand(args, words);
 	}
-
 	else if (firstWord.compare("listdir") == 0) {
 		return new ListDirCommand();
 	}
