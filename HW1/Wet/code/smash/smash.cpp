@@ -28,7 +28,7 @@
 
 BuiltInCommand* _createBuiltInCommand(char** args, int words, const char* original_command) {
 	std::string firstWord = _trim(args[0]);
-	if (firstWord.at(firstWord.size()-1) == '&') {
+	if (firstWord.at(firstWord.size()-1) == '&' && words == 1) {
 		firstWord = firstWord.substr(0, firstWord.size()-1);
 	}
 
@@ -117,21 +117,20 @@ void _redirectIO(Command* cmd, const char *cmd_line) {
     }
 }
 
-std::string SmallShell::applyAlias(const std::string& cmd_line) {
-    std::string cmd_s = cmd_line;
-    std::map<std::string, AliasVal>& alias = getAliases();
-    for (auto it = alias.begin(); it != alias.end(); ++it) {
-        const std::string& key = it->first;
-        const std::pair<std::string, char>& value = it->second;
+std::string SmallShell::applyAliases(const std::string& cmd_line) {
+    std::string cmd_s = strdup(cmd_line.c_str());
+    std::map<std::string, AliasVal>& aliases = getAliases();
+    for (auto it = aliases.begin(); it != aliases.end(); ++it) {
+		auto alias = *it;
+        const std::string& key = alias.first;
+        const std::pair<std::string, char>& value = alias.second;
 
         size_t pos = cmd_s.find(key, 0);
-		bool done = false;
-        while (pos != std::string::npos && !done) {
-            // Check if replacing will reintroduce the key (self-replacement).
-            if (value.first.find(key) != std::string::npos) {
-				done = true;
-				continue;
-            }
+		size_t minPos = pos;
+		size_t prevPos = pos+1;
+        while (pos != std::string::npos && minPos <= pos && prevPos != pos) {
+			prevPos = pos;
+			minPos = pos;
             cmd_s.replace(pos, key.length(), value.first);
             pos = cmd_s.find(key, pos + value.first.length());
         }
@@ -140,7 +139,7 @@ std::string SmallShell::applyAlias(const std::string& cmd_line) {
 }
 
 void SmallShell::executeCommand(const char *original_cmd_line) {
-	std::string appliedAliasCmd = applyAlias(original_cmd_line);
+	std::string appliedAliasCmd = applyAliases(original_cmd_line);
 	std::string cmd_s = _trim(appliedAliasCmd);
 
     Command* cmd = createCommand(original_cmd_line, cmd_s);

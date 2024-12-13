@@ -21,7 +21,7 @@ private:
     bool m_quitCalled = false;
     std::map<std::string, std::pair<std::string,char>> m_aliases;
 
-    std::string applyAlias(const std::string& cmd_line);
+    std::string applyAliases(const std::string& cmd_line);
 
 public:
     SmallShell(SmallShell const &) = delete; // disable copy ctor
