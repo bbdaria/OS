@@ -42,10 +42,7 @@ public:
             perror("smash error: stat failed");
             return;
         }
-        printOut(m_dirPath);
-        printOut("\n");
-        listDirectory(dirFd, m_dirPath.c_str(), 1); // Start recursive listing with indentation level 1.
-
+        listDirectory(dirFd, m_dirPath.c_str(), 0); // Start recursive listing with indentation level 1.
         close(dirFd);
     }
 
@@ -66,8 +63,7 @@ private:
         return dirFd;
     }
 
-    // Helper to print the name with proper indentation
-    void printWithIndent(const std::string& name, int indentLevel) {
+    void printIndent(const std::string& name, int indentLevel) {
         for (int i = 0; i < indentLevel; ++i) {
             printOut("\t");
         }
@@ -106,7 +102,7 @@ private:
                 // Full path to the entry
                 std::string fullPath = std::string(dirPath) + "/" + entry->d_name;
 
-                // Check entry type (using stat to differentiate directories and files)
+                // using stat to differentiate directories and files
                 struct stat statbuf;
                 if (stat(fullPath.c_str(), &statbuf) == 0) {
                     if (S_ISDIR(statbuf.st_mode)) {
@@ -125,15 +121,15 @@ private:
             return;
         }
 
-        // Sort directories and files alphabetically
+        // sort directories and files alphabetically
         std::sort(directories.begin(), directories.end());
         std::sort(files.begin(), files.end());
 
-        // Print directories first
+        // print directories first
         for (const std::string& dirName : directories) {
-            printWithIndent(dirName, indentLevel);
+            printIndent(dirName, indentLevel);
 
-            // Open directory for recursive call
+            // recursive call
             std::string newDirPath = std::string(dirPath) + "/" + dirName;
             int newDirFd = openDirectory(newDirPath.c_str());
             if (newDirFd != -1) {
@@ -142,9 +138,9 @@ private:
             }
         }
 
-        // Print files
+        // print files after directories
         for (const std::string& fileName : files) {
-            printWithIndent(fileName, indentLevel);
+            printIndent(fileName, indentLevel);
         }
     }
 };
