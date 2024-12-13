@@ -24,7 +24,7 @@ FILES=(
     "commands/built_in/show_pid/show_pid_command.h"
     "commands/built_in/special/listdir/listdir_command.h"
     "commands/built_in/special/net_info/net_info_command.h"
-    "commands/built_in/special/who_am_i/who_am_i_command.h"
+    "commands/built_in/special/whoami/who_am_i_command.h"
 
     "commands/external/external_command.h"
     "commands/external/complex/complex_command.h"

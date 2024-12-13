@@ -15,8 +15,13 @@ if [ ! -f "$LIST_FILE" ]; then
     exit 1
 fi
 
+if [ -f "$ZIP_NAME" ]; then
+    echo "Removing existing zip file: $ZIP_NAME"
+    rm "$ZIP_NAME"
+fi
+
 # Read the list file and zip the files
 # zip -v "$ZIP_NAME" < "$LIST_FILE"
-zip -@ "$ZIP_NAME" < "$LIST_FILE"
+zip -j "$ZIP_NAME" -@ < "$LIST_FILE"
 
 echo "Files zipped into $ZIP_NAME"
