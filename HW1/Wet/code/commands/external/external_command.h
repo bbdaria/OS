@@ -30,7 +30,7 @@ public:
             if (pid == 0) {
                 // child
                 setpgrp(); // Create a new process group for the child
-                actualExecute();
+                actualExecute(nullptr);
                 exit(0);
             }
             else {
@@ -40,11 +40,14 @@ public:
             }
         }
         else {
-            actualExecute();
+            SmallShell& smash = SmallShell::getInstance();
+            JobsList::JobEntry* fgJob = new JobsList::JobEntry(m_original_cmd_line.c_str());
+            smash.setForeGround(fgJob);
+            actualExecute(fgJob);
         }
     }
 
-    virtual void actualExecute() = 0;
+    virtual void actualExecute(JobsList::JobEntry* childJob) = 0;
 private:
     bool m_background;
     std::string m_original_cmd_line;

@@ -9,7 +9,7 @@ public:
     ComplexExternalCommand(const char *original_cmd_line, std::string& cmd_line)
         : ExternalCommand(original_cmd_line, cmd_line) {}
 
-    void actualExecute() override {
+    void actualExecute(JobsList::JobEntry* childJob) override {
         int pid = fork();
         if (pid < 0) {
             perror("smash error: fork failed");
@@ -31,6 +31,7 @@ public:
             exit(1);
         }
         else {
+            if (childJob) childJob->setPID(pid);
             // Parent process waits for the child process to finish
             if (waitpid(pid, nullptr, WUNTRACED) < 0) {
                 perror("smash error: waitpid failed");

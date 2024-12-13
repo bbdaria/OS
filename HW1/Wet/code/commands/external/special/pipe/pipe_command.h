@@ -24,7 +24,7 @@ public:
         }
     }
 
-    void actualExecute() override {
+    void actualExecute(JobsList::JobEntry* childJob) override {
         SmallShell& smash = SmallShell::getInstance();
 
         // Create the two commands from the left and right parts of the pipe

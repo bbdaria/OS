@@ -76,6 +76,9 @@ public:
             std::string cmd_line;
             std::getline(std::cin, cmd_line);
             executeCommand(cmd_line.c_str());
+            if (m_forground != nullptr) {
+                delete m_forground;
+            }
             setForeGround(nullptr);
         }
     }
