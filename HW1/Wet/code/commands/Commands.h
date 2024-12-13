@@ -71,8 +71,13 @@ public:
             close(fd);
         }
 
-        // Output the str
-        std::cout << str;
+        if (str.compare("\n") == 0) {
+            std::cout << std::endl;
+        }
+        else {
+            // Output the str
+            std::cout << str;
+        }
 
         // Restore original stdout if redirection was used
         if (m_isRedirection) {
