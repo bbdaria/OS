@@ -42,7 +42,7 @@ public:
             perror("smash error: stat failed");
             return;
         }
-        listDirectory(dirFd, m_dirPath.c_str(), 0); // Start recursive listing with indentation level 1.
+        printListedDirectory(dirFd, m_dirPath.c_str(), 0); // Start recursive listing with indentation level 1.
         close(dirFd);
     }
 
@@ -71,8 +71,7 @@ private:
         printOut("\n");
     }
 
-    // Function to list directory contents recursively
-    void listDirectory(int dirFd, const char* dirPath, int indentLevel) {
+    void printListedDirectory(int dirFd, const char* dirPath, int indentLevel) {
         // Buffer for reading directory entries
         char buffer[4096];
         struct linux_dirent64 {
@@ -98,7 +97,7 @@ private:
                     ptr += entry->d_reclen;
                     continue;
                 }
-                
+
                 std::string fullPath = std::string(dirPath) + "/" + entry->d_name;
 
                 // using stat to differentiate directories and files
@@ -132,7 +131,7 @@ private:
             std::string newDirPath = std::string(dirPath) + "/" + dirName;
             int newDirFd = openDirectory(newDirPath.c_str());
             if (newDirFd != -1) {
-                listDirectory(newDirFd, newDirPath.c_str(), indentLevel + 1);
+                printListedDirectory(newDirFd, newDirPath.c_str(), indentLevel + 1);
                 close(newDirFd);
             }
         }
