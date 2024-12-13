@@ -38,7 +38,7 @@ FILES=(
     "smash/smash.h"
     "main.cpp"
     "util.cpp"
-    "Makefile"
+    "../Makefile"
     # "submitters.txt" (part of GLOBAL_FILES)
 )
 
