@@ -44,7 +44,7 @@ public:
     void execute() override {
         if (m_error) {
             printErr(m_err_msg);
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
         SmallShell &smash = SmallShell::getInstance();
@@ -62,7 +62,7 @@ public:
             perror("smash error: waitpid failed");
             return;
         }
-        printOut(std::endl);
+        printOut("\n");
     }
 private:
     bool m_error;

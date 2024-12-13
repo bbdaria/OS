@@ -31,7 +31,7 @@ public:
     void execute() override {
         if (m_error) {
             printErr(m_err_msg);
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
         SmallShell& smash = SmallShell::getInstance();
@@ -41,7 +41,7 @@ public:
             printErr("smash error: kill: job-id ");
             printErr(std::to_string(m_jobId));
             printErr(" does not exist");
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
 
@@ -57,7 +57,7 @@ public:
         printOut(std::to_string(m_sigNum));
         printOut(" was sent to pid ");
         printOut(std::to_string(pid));
-        printOut(std::endl);
+        printOut("\n");
     }
 
 private:

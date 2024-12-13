@@ -13,7 +13,7 @@ public:
         char *cwd = getcwd(nullptr, 0);
         if (cwd != nullptr) {
             printOut(cwd);
-            printOut(std::endl);
+            printOut("\n");
             free(cwd);
         }
         else {

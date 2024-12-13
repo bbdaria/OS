@@ -28,7 +28,7 @@ public:
     void execute() override {
         if (m_error) {
             printErr(m_err_msg);
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
         // this is built-in command and so will run at smash PCB

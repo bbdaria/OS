@@ -23,7 +23,7 @@ public:
     void execute() override {
         if (m_error) {
             printErr(m_err_msg);
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
 
@@ -36,7 +36,7 @@ public:
                 printErr("smash error: unalias: ");
                 printErr(alias);
                 printErr(" alias does not exist");
-                printErr(std::endl);
+                printErr("\n");
                 return;
             }
         }

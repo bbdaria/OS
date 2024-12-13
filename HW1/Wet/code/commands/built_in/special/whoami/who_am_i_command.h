@@ -77,7 +77,7 @@ private:
             printOut(username);
             printOut(" ");
             printOut(homedir);
-            printOut(std::endl);
+            printOut("\n");
             return true;
         }
         return false;

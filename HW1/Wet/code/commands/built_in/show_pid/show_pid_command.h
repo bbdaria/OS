@@ -15,7 +15,7 @@ public:
         printOut(smash.getStartPrompt());
         printOut(" pid is ");
         printOut(std::to_string(getpid()));
-        printOut(std::endl);
+        printOut("\n");
     }
 };
 

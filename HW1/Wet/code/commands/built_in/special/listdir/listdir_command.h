@@ -30,7 +30,7 @@ public:
     void execute() override {
         if (m_error) {
             printErr(m_err_msg);
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
 
@@ -41,7 +41,7 @@ public:
             return;
         }
         printOut(m_dirPath);
-        printOut(std::endl);
+        printOut("\n");
         listDirectory(dirFd, m_dirPath.c_str(), 1); // Start recursive listing with indentation level 1.
 
         close(dirFd);
@@ -70,7 +70,7 @@ private:
             printOut("\t");
         }
         printOut(name);
-        printOut(std::endl);
+        printOut("\n");
     }
 
     // Function to list directory contents recursively

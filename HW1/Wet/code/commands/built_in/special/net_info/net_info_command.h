@@ -26,7 +26,7 @@ public:
     void execute() override {
         if (m_error) {
             printErr(m_err_msg);
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
 
@@ -45,7 +45,7 @@ public:
             printErr("smash error: netinfo: interface ");
             printErr(m_interface);
             printErr(" does not exist");
-            printErr(std::endl);
+            printErr("\n");
             close(sock);
             return;
         }

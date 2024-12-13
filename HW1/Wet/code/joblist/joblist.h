@@ -2,7 +2,8 @@
 #define JOBSLIST_H_
 
 #include <vector>
-class Command;
+#include "commands/Commands.h"
+
 class JobsList {
 public:
     class JobEntry {
@@ -30,7 +31,7 @@ public:
             command->printOut(std::to_string(m_jobId));
             command->printOut("] ");
             command->printOut(m_cmd_line);
-            command->printOut(std::endl);
+            command->printOut("\n");
         }
     };
 
@@ -70,14 +71,14 @@ public:
         command->printOut(": sending SIGKILL signal to ");
         command->printOut(std::to_string(m_listOfJobs.size()));
         command->printOut(" jobs:");
-        command->printOut(std::endl);
+        command->printOut("\n");
         for (JobEntry& jobEntry : m_listOfJobs) {
             int pid = jobEntry.getPID();
             kill(pid, SIGKILL);
             command->printOut(std::to_string(pid));
             command->printOut(": ");
             command->printOut(jobEntry.getCmdLine());
-            command->printOut(std::endl);
+            command->printOut("\n");
         }
     }
 
@@ -101,7 +102,7 @@ public:
         return nullptr;
     }
 
-    void JobsList::removeJobById(int jobId) {
+    void removeJobById(int jobId) {
         for (auto it = m_listOfJobs.begin(); it != m_listOfJobs.end(); ++it) {
             if (it->getId() == jobId) {
                 m_listOfJobs.erase(it);

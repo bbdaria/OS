@@ -25,7 +25,7 @@ public:
                 printOut(val.second);
                 printOut(val.first);
                 printOut(val.second);
-                printOut(std::endl);
+                printOut("\n");
             }
             return;
         }
@@ -36,7 +36,7 @@ public:
         bool validFormat = isValidAliasFormat(cmd_s, name, command, &quotationMarks);
         if (!validFormat) {
             printErr("smash error: alias: invalid alias format");
-            printErr(std::endl);
+            printErr("\n");
             return;
         }
         else {
@@ -46,7 +46,7 @@ public:
                 printErr("smash error: alias: ");
                 printErr(name);
                 printErr(" already exists or is a reserved command");
-                printErr(std::endl);
+                printErr("\n");
                 return;
             }
             // Add alias
