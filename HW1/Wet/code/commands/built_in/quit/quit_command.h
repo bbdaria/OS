@@ -11,7 +11,7 @@ public:
     QuitCommand(char** args, int words) : m_kill_jobsList(false) {
         if (words >= 2) {
             std::string kill_str = "kill";
-            if (kill_str.compare(args[1])) {
+            if (kill_str.compare(args[1]) == 0) {
                 m_kill_jobsList = true;
             }
         }

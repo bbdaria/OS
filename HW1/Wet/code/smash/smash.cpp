@@ -27,10 +27,10 @@
 #include "commands/external/special/pipe/pipe_command.h"
 
 BuiltInCommand* _createBuiltInCommand(char** args, int words, const char* original_command) {
-	char* firstWordPointer = strdup(args[0]);
-	_removeBackgroundSign(firstWordPointer);
-	std::string firstWord = firstWordPointer;
-	free(firstWordPointer);
+	std::string firstWord = _trim(args[0]);
+	if (firstWord.at(firstWord.size()-1) == '&') {
+		firstWord = firstWord.substr(0, firstWord.size()-1);
+	}
 
 	if (firstWord.compare("chprompt") == 0) {
 		return new Chprompt(args, words);

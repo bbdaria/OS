@@ -38,7 +38,10 @@ public:
         }
     };
 
-    JobsList()=default;
+    JobsList() {
+        m_listOfJobs = std::vector<JobEntry>();
+        m_maxJobId = 0;
+    }
     ~JobsList()=default;
 
     bool contains(int jobId) {
@@ -60,8 +63,7 @@ public:
     void addJob(const char* cmd, int pid, bool isStopped = false) {
         removeFinishedJobs(); // removing finished jobs before adding
 
-        int jobId = m_maxJobId+1;
-        m_maxJobId++;
+        int jobId = ++m_maxJobId;
         JobEntry job(cmd, jobId, pid);
         m_listOfJobs.push_back(job);
     }
@@ -107,22 +109,19 @@ public:
         return nullptr;
     }
 
-    void removeJobById(int jobId) {
-        for (auto it = m_listOfJobs.begin(); it != m_listOfJobs.end(); ++it) {
+    JobEntry* removeJobById(int jobId) {
+        for (auto it = m_listOfJobs.begin(); it != m_listOfJobs.end();) {
             if (it->getId() == jobId) {
                 m_listOfJobs.erase(it);
-                return;
+                return &(*it);
             }
+            ++it;
         }
+        return nullptr;
     }
-    
-    JobEntry *getLastJob(int *lastJobId);
-
-    JobEntry *getLastStoppedJob(int *jobId);
-
 private:
     std::vector<JobEntry> m_listOfJobs;
-    int m_maxJobId = 0;
+    int m_maxJobId;
 };
 
 #endif //JOBSLIST_H_
