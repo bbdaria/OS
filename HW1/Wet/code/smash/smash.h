@@ -17,7 +17,7 @@ private:
     JobsList::JobEntry* m_forground = nullptr;
     JobsList m_jobsList;
     std::string m_start_prompt = DEFAULT_START_PROMPT;
-    char **m_plastPwd = nullptr;
+    char *m_plastPwd = nullptr;
     bool m_quitCalled = false;
     std::map<std::string, std::pair<std::string,char>> m_aliases;
 
@@ -50,12 +50,12 @@ public:
     }
 
     char* plastPwd() {
-        return *m_plastPwd;
+        return m_plastPwd;
     }
 
     void updatePlastPwd(char* cwd) {
-        delete *m_plastPwd;
-        *m_plastPwd = cwd;
+        delete m_plastPwd;
+        m_plastPwd = cwd;
     }
 
     void quit() {

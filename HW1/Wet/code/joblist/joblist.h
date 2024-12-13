@@ -93,6 +93,9 @@ public:
                 ++it;
             }
         }
+        if (empty()) {
+            m_maxJobId = 0;
+        }
     }
 
     JobEntry* getJobById(int jobId) {
