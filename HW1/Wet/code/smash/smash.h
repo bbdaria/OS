@@ -4,8 +4,8 @@
 #include <iostream>
 #include <set>
 #include <map>
-#include "code/commands/Commands.h"
-#include "code/joblist/joblist.h"
+#include "commands/Commands.h"
+#include "joblist/joblist.h"
 
 class SmallShell {
 private:

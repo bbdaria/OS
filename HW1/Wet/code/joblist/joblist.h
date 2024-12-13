@@ -2,8 +2,7 @@
 #define JOBSLIST_H_
 
 #include <vector>
-#include "external/external_command.h"
-
+class Command;
 class JobsList {
 public:
     class JobEntry {

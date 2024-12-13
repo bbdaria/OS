@@ -1,7 +1,7 @@
 # TODO: replace ID with your own IDS, for example: 123456789_123456789
 SUBMITTERS := 328137831_327900817
 COMPILER := g++
-COMPILER_FLAGS := --std=c++11 -Wall
+COMPILER_FLAGS := --std=c++11 -Wall -Icode
 CODE_DIR := code
 SRCS := $(CODE_DIR)/main.cpp $(CODE_DIR)/signals/signals.cpp $(CODE_DIR)/smash/smash.cpp
 OBJS := $(SRCS:.cpp=.o)
