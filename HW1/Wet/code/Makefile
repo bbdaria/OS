@@ -2,9 +2,9 @@
 SUBMITTERS := 328137831_327900817
 COMPILER := g++
 COMPILER_FLAGS := --std=c++11 -Wall
-SRCS := Commands.cpp signals.cpp smash.cpp
+SRCS := main.cpp signals/signals.cpp smash/smash.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
-HDRS := Commands.h signals.h
+HDRS := $(shell find code -name '*.h')  # Dynamically find all .h files
 TESTS_INPUTS := $(wildcard test_input*.txt)
 TESTS_OUTPUTS := $(subst input,output,$(TESTS_INPUTS))
 SMASH_BIN := smash
@@ -24,7 +24,7 @@ $(OBJS): %.o: %.cpp
 	$(COMPILER) $(COMPILER_FLAGS) -c $^
 
 zip: $(SRCS) $(HDRS)
-	zip $(SUBMITTERS).zip $^ submitters.txt Makefile
+	zip -j $(SUBMITTERS).zip $^ submitters.txt Makefile
 
 clean:
 	rm -rf $(SMASH_BIN) $(OBJS) $(TESTS_OUTPUTS) 
