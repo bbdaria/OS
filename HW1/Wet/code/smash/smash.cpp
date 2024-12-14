@@ -105,7 +105,7 @@ void SmallShell::applyAlias(std::string& cmd_s) {
 	if (pos == std::string::npos) pos = cmd_s.length();
 	std::string firstWord = cmd_s.substr(0, pos);
 
-    std::map<std::string, AliasVal>& aliases = getAliases();
+    std::vector<Alias>& aliases = getAliases();
     for (auto it = aliases.begin(); it != aliases.end(); ++it) {
 		auto alias = *it;
         const std::string& name = alias.first;

@@ -4,9 +4,12 @@
 #include <iostream>
 #include <cstring>
 #include <set>
-#include <map>
+#include <vector>
 #include "commands/Commands.h"
 #include "joblist/joblist.h"
+
+typedef std::pair<std::string, char> AliasVal;
+typedef std::pair<std::string, AliasVal> Alias;
 
 class SmallShell {
 private:
@@ -20,7 +23,8 @@ private:
     std::string m_start_prompt = DEFAULT_START_PROMPT;
     char *m_plastPwd = nullptr;
     bool m_quitCalled = false;
-    std::map<std::string, std::pair<std::string,char>> m_aliases;
+
+    std::vector<Alias> m_aliases;
 
     void applyAlias(std::string& cmd_s);
 
@@ -111,9 +115,7 @@ public:
         };
     }
 
-    typedef std::pair<std::string, char> AliasVal;
-
-    std::map<std::string, AliasVal>& getAliases() {
+    std::vector<Alias>& getAliases() {
         return m_aliases;
     }
 };

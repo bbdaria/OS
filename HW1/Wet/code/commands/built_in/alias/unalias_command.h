@@ -25,14 +25,12 @@ public:
             std::cerr << m_err_msg << std::endl;
             return;
         }
-
-        SmallShell& smash = SmallShell::getInstance();
-        auto& aliases = smash.getAliases();
-
-        for (const std::string& alias : m_names) {
-            if (aliases.erase(alias) == 0) {
+        
+        for (const std::string& aliasName : m_names) {
+            bool removed = removeAliasByName(aliasName);
+            if (!removed) {
                 // Report error if alias does not exist
-                std::cerr << "smash error: unalias: " << alias << " alias does not exist" << std::endl;
+                std::cerr << "smash error: unalias: " << aliasName << " alias does not exist" << std::endl;
                 return;
             }
         }
@@ -42,6 +40,22 @@ private:
     bool m_error;
     std::string m_err_msg;
     std::vector<std::string> m_names; // aliases to remove
+
+    bool removeAliasByName(const std::string &aliasName) {
+        auto& aliases = SmallShell::getInstance().getAliases();
+        for (auto it = aliases.begin(); it != aliases.end();) {
+            auto alias = *it;
+            const std::string& name = alias.first;
+            if (aliasName.compare(name) == 0) {
+                aliases.erase(it);
+                return true;
+            }
+            else {
+                ++it;
+            }
+        }
+        return false;
+    }
 };
 
 #endif // UNALIAS_COMMAND_H_

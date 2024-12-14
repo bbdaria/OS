@@ -16,7 +16,7 @@ public:
         if (_trim(cmd_s).compare("alias") == 0) {
             // print alias list
             SmallShell& smash = SmallShell::getInstance();
-            std::map<std::string, std::pair<std::string,char>>& aliases = smash.getAliases();
+            auto& aliases = smash.getAliases();
             for (const auto &alias : aliases) {
                 std::string name = alias.first;
                 std::pair<std::string,char> val = alias.second;
@@ -35,19 +35,35 @@ public:
         }
         else {
             // Validate and add alias
-            auto& aliases = SmallShell::getInstance().getAliases();
-            if (isReservedCommand(name) || aliases.find(name) != aliases.end()) {
+            if (isReservedCommand(name) || existsAsAlias(name)) {
                 std::cerr << "smash error: alias: " << name << " already exists or is a reserved command";
                 std::cerr << std::endl;
                 return;
             }
+
+            AliasVal val = std::pair<std::string, char>(command, quotationMarks);
+            Alias alias = std::pair<std::string, AliasVal>(name, val);
+
             // Add alias
-            aliases[name] = std::pair<std::string, char>(command, quotationMarks);
+            auto& aliases = SmallShell::getInstance().getAliases();
+            aliases.emplace_back(alias);
         }
     }
 
 private:
     std::string m_cmd_line;
+
+    bool existsAsAlias(const std::string &newName) {
+        auto& aliases = SmallShell::getInstance().getAliases();
+        for (auto it = aliases.begin(); it != aliases.end(); ++it) {
+            auto alias = *it;
+            const std::string& name = alias.first;
+            if (newName.compare(name) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     bool isReservedCommand(const std::string &name) {
         // List of reserved commands
