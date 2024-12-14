@@ -69,7 +69,7 @@ private:
             // Determine the flags for open()
             int overrideFlag = m_redirectionAppend ? O_APPEND : O_TRUNC;
             int flags = O_WRONLY | O_CREAT | overrideFlag;
-            fd = open(m_redirectionFile.c_str(), flags, 0644);
+            fd = open(m_redirectionFile.c_str(), flags, 0666);
             if (fd < 0) {
                 perror("smash error: open failed");
                 close(m_originalStdoutFd);
