@@ -22,7 +22,7 @@ private:
     bool m_quitCalled = false;
     std::map<std::string, std::pair<std::string,char>> m_aliases;
 
-    std::string applyAliases(const std::string& cmd_line);
+    void applyAlias(std::string& cmd_s);
 
 public:
     SmallShell(SmallShell const &) = delete; // disable copy ctor
@@ -35,8 +35,9 @@ public:
         return instance;
     }
 
-    Command* createCommand(const char *original_cmd_line, std::string& cmd_s);
+    Command* createCommand(const char *original_cmd_line, std::string& cmd_s, bool background);
     void executeCommand(const char *cmd_line);
+    bool preProcessCmdLine(const char *original_cmd_line, std::string& out);
 
     void setStartPrompt(std::string& s) {
         m_start_prompt = (s.size() ? s : DEFAULT_START_PROMPT);

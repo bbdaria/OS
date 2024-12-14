@@ -25,12 +25,10 @@
 #include "commands/external/simple/simple_command.h"
 #include "commands/external/complex/complex_command.h"
 #include "commands/external/special/pipe/pipe_command.h"
+#include "smash.h"
 
-BuiltInCommand* _createBuiltInCommand(char** args, int words, const char* original_command) {
+BuiltInCommand* _createBuiltInCommand(char** args, int words, std::string cmd_s) {
 	std::string firstWord = _trim(args[0]);
-	if (firstWord.at(firstWord.size()-1) == '&' && words == 1) {
-		firstWord = firstWord.substr(0, firstWord.size()-1);
-	}
 
 	if (firstWord.compare("chprompt") == 0) {
 		return new Chprompt(args, words);
@@ -57,10 +55,10 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words, const char* origin
 		return new KillCommand(args, words);
 	}
 	else if (firstWord.compare("alias") == 0) {
-		return new AliasCommand(original_command);
+		return new AliasCommand(cmd_s);
 	}
 	else if (firstWord.compare("unalias") == 0) {
-		return new UnaliasCommand(original_command);
+		return new UnaliasCommand(args, words);
 	}
 	else if (firstWord.compare("listdir") == 0) {
 		return new ListDirCommand(args, words);
@@ -74,11 +72,11 @@ BuiltInCommand* _createBuiltInCommand(char** args, int words, const char* origin
 	return nullptr;
 }
 
-ExternalCommand* _createExternalCommand(const char *original_cmd_line, std::string& cmd_s, char** args, int words) {
+ExternalCommand* _createExternalCommand(const char *original_cmd_line, std::string& cmd_s, bool background) {
 	if (ExternalCommand::isComplexCommand(cmd_s)) {
-		return new ComplexExternalCommand(original_cmd_line, cmd_s);
+		return new ComplexExternalCommand(original_cmd_line, cmd_s, background);
 	} else {
-		return new SimpleExternalCommand(original_cmd_line, cmd_s);
+		return new SimpleExternalCommand(original_cmd_line, cmd_s, background);
 	}
 	return nullptr;
 }
@@ -86,56 +84,65 @@ ExternalCommand* _createExternalCommand(const char *original_cmd_line, std::stri
 /**
 * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
 */
-Command* SmallShell::createCommand(const char *original_cmd_line, std::string& cmd_s) {
-	if (cmd_s.find('|') != std::string::npos || cmd_s.find("|&") != std::string::npos) {
-        // If it contains a pipe, create a PipeCommand
-        return new PipeCommand(original_cmd_line, cmd_s);
-    }
-	
-    char** args = (char**) malloc(sizeof(char*) * 20);  // Assuming a maximum of 20 arguments
+Command* SmallShell::createCommand(const char *original_cmd_line, std::string& cmd_s, bool background) {
+    char** args = (char**) malloc(sizeof(char*) * 100);  // Assuming a maximum of 20 arguments
 	int words = _parseCommandLine(cmd_s.c_str(), args);
 	Command* result = nullptr;
 	if (words > 0) {
-		result = _createBuiltInCommand(args, words, original_cmd_line);
-		result = (result!=nullptr ? result : _createExternalCommand(original_cmd_line, cmd_s, args, words));
+		if (cmd_s.find('|') != std::string::npos || cmd_s.find("|&") != std::string::npos) {
+			// If it contains a pipe, create a PipeCommand
+			result = new PipeCommand(original_cmd_line, cmd_s, background);
+		}
+		result = (result!=nullptr ? result : _createBuiltInCommand(args, words, cmd_s));
+		result = (result!=nullptr ? result : _createExternalCommand(original_cmd_line, cmd_s, background));
 	}
 	_freeArgs(args, words);
 	return result;
 }
 
-std::string SmallShell::applyAliases(const std::string& cmd_line) {
-    std::string cmd_s = strdup(cmd_line.c_str());
+void SmallShell::applyAlias(std::string& cmd_s) {
+	size_t pos = cmd_s.find_first_of(WHITESPACE);
+	if (pos == std::string::npos) pos = cmd_s.length();
+	std::string firstWord = cmd_s.substr(0, pos);
+
     std::map<std::string, AliasVal>& aliases = getAliases();
     for (auto it = aliases.begin(); it != aliases.end(); ++it) {
 		auto alias = *it;
-        const std::string& key = alias.first;
+        const std::string& name = alias.first;
         const std::pair<std::string, char>& value = alias.second;
+		std::string str = value.first;
 
-        size_t pos = cmd_s.find(key, 0);
-		size_t minPos = pos;
-		size_t prevPos = pos+1;
-        while (pos != std::string::npos && minPos <= pos && prevPos != pos) {
-			prevPos = pos;
-			minPos = pos;
-            cmd_s.replace(pos, key.length(), value.first);
-            pos = cmd_s.find(key, pos + value.first.length());
-        }
+        if (firstWord.compare(name) == 0) {
+			cmd_s = _trim(cmd_s.replace(0, pos, str));
+			return;
+		}
     }
-    return cmd_s;
 }
 
 void SmallShell::executeCommand(const char *original_cmd_line) {
-	std::string appliedAliasCmd = applyAliases(original_cmd_line);
-	std::string cmd_s = _trim(appliedAliasCmd);
+	std::string cmd_s;
+	bool background = preProcessCmdLine(original_cmd_line, cmd_s);
 
 	// I/O redirection: (cuts cmd_s)
 	auto redirectResultIO = _redirectIO(cmd_s);
 	
-    Command* cmd = createCommand(original_cmd_line, cmd_s);
+    Command* cmd = createCommand(original_cmd_line, cmd_s, background);
 	if (cmd != nullptr) {
 		cmd->redirectIO(redirectResultIO);
 		m_jobsList.removeFinishedJobs(); // removing finished jobs before executing cmd
         cmd->execute();
         delete cmd; // Prevent memory leaks
     }
+}
+
+bool SmallShell::preProcessCmdLine(const char *original_cmd_line, std::string& out) {
+	std::string originalCmd = strdup(original_cmd_line);
+	out = _trim(originalCmd);
+	bool background = out.at(out.size()-1) == '&';
+	if (background) {
+		out = out.substr(0, out.size()-1);
+		out = _trim(out);
+	}
+	applyAlias(out);
+	return background;
 }

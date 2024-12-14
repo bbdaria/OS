@@ -9,8 +9,8 @@
 
 class PipeCommand : public ExternalCommand {
 public:
-    PipeCommand(const char *original_cmd_line, std::string& cmd_line)
-        : ExternalCommand(original_cmd_line, cmd_line) {
+    PipeCommand(const char *original_cmd_line, std::string& cmd_line, bool background)
+        : ExternalCommand(original_cmd_line, cmd_line, background) {
         // Split the command line into two parts: before and after the pipe
         size_t pipePos = cmd_line.find('|');
         int splitSize = 1;
@@ -37,8 +37,9 @@ public:
         std::string tempFile(tempFileTemplate);
 
         // Create and execute the left command
-        std::string leftTrimmed = _trim(m_leftCmdLine);
-        Command* leftCmd = smash.createCommand(m_leftCmdLine.c_str(), leftTrimmed);
+        std::string leftCmd_s;
+        smash.preProcessCmdLine(m_leftCmdLine.c_str(), leftCmd_s); // ignore &
+        Command* leftCmd = smash.createCommand(m_leftCmdLine.c_str(), leftCmd_s, false);
         leftCmd->pipeRedirect(m_isErrPipe, tempFile);
         leftCmd->execute();
         delete leftCmd;
@@ -53,11 +54,7 @@ public:
         }
 
         m_rightCmdLine.append(fileContent);
-        // Prepare the right command
-        std::string rightTrimmed = strdup((m_rightCmdLine).c_str());
-        Command* rightCmd = smash.createCommand(m_rightCmdLine.c_str(), rightTrimmed);
-        rightCmd->execute();
-        delete rightCmd;
+        smash.executeCommand(m_rightCmdLine.c_str());
     }
 
 private:

@@ -6,8 +6,8 @@
 
 class ComplexExternalCommand : public ExternalCommand {
 public:
-    ComplexExternalCommand(const char *original_cmd_line, std::string& cmd_line)
-        : ExternalCommand(original_cmd_line, cmd_line) {}
+    ComplexExternalCommand(const char *original_cmd_line, std::string& cmd_line, bool background)
+        : ExternalCommand(original_cmd_line, cmd_line, background) {}
 
     void actualExecute(JobsList::JobEntry* childJob) override {
         int pid = fork();

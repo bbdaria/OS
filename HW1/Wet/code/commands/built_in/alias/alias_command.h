@@ -9,7 +9,7 @@
 
 class AliasCommand : public BuiltInCommand {
 public:
-    AliasCommand(const char *cmd_line) : m_cmd_line(cmd_line) {}
+    AliasCommand(std::string& cmd_line) : m_cmd_line(cmd_line) {}
 
     void execute() override {
         std::string cmd_s(m_cmd_line);
