@@ -43,18 +43,12 @@ public:
         leftCmd->pipeRedirect(m_isErrPipe, tempFile);
         leftCmd->execute();
         delete leftCmd;
-
-        std::string fileContent(readFile(tempFile));
+        
+        m_rightCmdLine.append(" " + tempFile);
+        smash.executeCommand(m_rightCmdLine.c_str());
 
         // Delete the temporary file
         unlink(tempFile.c_str());
-
-        if (fileContent.compare("\0") == 0) {
-            return;
-        }
-
-        m_rightCmdLine.append(fileContent);
-        smash.executeCommand(m_rightCmdLine.c_str());
     }
 
 private:
