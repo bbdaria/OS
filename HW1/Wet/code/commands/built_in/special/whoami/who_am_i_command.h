@@ -60,16 +60,13 @@ private:
         pos = nextPos + 1;
         nextPos = line.find(':', pos);
         if (nextPos == std::string::npos) return false;
-        std::string password = line.substr(pos, nextPos - pos); // Unused
+        std::string password = line.substr(pos, nextPos - pos); // unused
 
         pos = nextPos + 1;
         nextPos = line.find(':', pos);
         if (nextPos == std::string::npos) return false;
         std::string uidStr = line.substr(pos, nextPos - pos);
-
-        // Convert uidStr to an integer and compare with current process uid
         if (std::stoi(uidStr) == static_cast<int>(uid)) {
-            // Get the home directory
             pos = nextPos + 1;
             nextPos = line.find(':', pos);
             if (nextPos == std::string::npos) return false;
