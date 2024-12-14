@@ -84,14 +84,16 @@ ExternalCommand* _createExternalCommand(const char *original_cmd_line, std::stri
 /**
 * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
 */
-Command* SmallShell::createCommand(const char *original_cmd_line, std::string& cmd_s, bool background) {
+Command* SmallShell::createCommand(const char *original_cmd_line, std::string& cmd_s, bool background, bool aliasCommand) {
     char** args = (char**) malloc(sizeof(char*) * 100);  // Assuming a maximum of 20 arguments
 	int words = _parseCommandLine(cmd_s.c_str(), args);
 	Command* result = nullptr;
 	if (words > 0) {
 		if (cmd_s.find('|') != std::string::npos || cmd_s.find("|&") != std::string::npos) {
 			// If it contains a pipe, create a PipeCommand
-			result = new PipeCommand(original_cmd_line, cmd_s, background);
+			if (!aliasCommand) {
+				result = new PipeCommand(original_cmd_line, cmd_s, background);
+			}
 		}
 		result = (result!=nullptr ? result : _createBuiltInCommand(args, words, cmd_s));
 		result = (result!=nullptr ? result : _createExternalCommand(original_cmd_line, cmd_s, background));
@@ -123,11 +125,15 @@ void SmallShell::executeCommand(const char *original_cmd_line) {
 	std::string cmd_s;
 	bool background = preProcessCmdLine(original_cmd_line, cmd_s);
 
+	std::string name_;
+	std::string cmd_;
+	char qm_;
+	bool aliasCommand = AliasCommand::isValidAliasFormat(cmd_s, name_, cmd_, qm_);
+
 	// I/O redirection: (cuts cmd_s)
-	auto redirectResultIO = _redirectIO(cmd_s);
-	bool isRedirection = redirectResultIO.first;
-	
-    Command* cmd = createCommand(original_cmd_line, cmd_s, background && !isRedirection);
+	auto redirectResultIO = _redirectIO(cmd_s, aliasCommand);
+	background = background && !redirectResultIO.first;
+    Command* cmd = createCommand(original_cmd_line, cmd_s, background, aliasCommand);
 	if (cmd != nullptr) {
 		cmd->redirectIO(redirectResultIO);
 		m_jobsList.removeFinishedJobs(); // removing finished jobs before executing cmd

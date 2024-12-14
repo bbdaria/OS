@@ -39,7 +39,7 @@ public:
         return instance;
     }
 
-    Command* createCommand(const char *original_cmd_line, std::string& cmd_s, bool background);
+    Command* createCommand(const char *original_cmd_line, std::string& cmd_s, bool background, bool aliasCommand);
     void executeCommand(const char *cmd_line);
     bool preProcessCmdLine(const char *original_cmd_line, std::string& out);
 

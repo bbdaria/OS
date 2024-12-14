@@ -76,7 +76,8 @@ bool _isDigitsOnly(const char *str)
 return true;
 }
 
-std::pair<bool,std::pair<bool,std::string>> _redirectIO(std::string& cmd_s) {
+std::pair<bool,std::pair<bool,std::string>> _redirectIO(std::string& cmd_s, bool aliasCmd) {
+	if (aliasCmd) return {false, {false, ""}};
     size_t pos = cmd_s.find('>');
 	bool redirectIO = pos != std::string::npos;
 	bool append = false;

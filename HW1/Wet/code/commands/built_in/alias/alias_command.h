@@ -50,6 +50,21 @@ public:
         }
     }
 
+    static bool isValidAliasFormat(const std::string &cmdStr, std::string& name, std::string& command, char& quotationMarks) {
+        std::regex aliasRegex(R"(^alias\s+([a-zA-Z0-9_]+)=(['`])(.*)\2$)");
+        std::smatch match;
+
+        if (std::regex_match(cmdStr, match, aliasRegex)) {
+            // captured groups: name, quotation marks, and command
+            name = match[1];
+            std::string quotationMarkStr = match[2];
+            quotationMarks = quotationMarkStr.at(0);
+            command = match[3];
+            return true;
+        }
+        return false;
+    }
+
 private:
     std::string m_cmd_line;
 
@@ -69,21 +84,6 @@ private:
         // List of reserved commands
         auto reserved = SmallShell::getInstance().getReservedWords();
         return reserved.find(name) != reserved.end();
-    }
-
-    static bool isValidAliasFormat(const std::string &cmdStr, std::string& name, std::string& command, char& quotationMarks) {
-        std::regex aliasRegex(R"(^alias\s+([a-zA-Z0-9_]+)=(['`])(.*)\2$)");
-        std::smatch match;
-
-        if (std::regex_match(cmdStr, match, aliasRegex)) {
-            // captured groups: name, quotation marks, and command
-            name = match[1];
-            std::string quotationMarkStr = match[2];
-            quotationMarks = quotationMarkStr.at(0);
-            command = match[3];
-            return true;
-        }
-        return false;
     }
 };
 

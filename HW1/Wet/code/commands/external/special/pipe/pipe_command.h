@@ -39,7 +39,7 @@ public:
         // Create and execute the left command
         std::string leftCmd_s;
         smash.preProcessCmdLine(m_leftCmdLine.c_str(), leftCmd_s); // ignore &
-        Command* leftCmd = smash.createCommand(m_leftCmdLine.c_str(), leftCmd_s, false);
+        Command* leftCmd = smash.createCommand(m_leftCmdLine.c_str(), leftCmd_s, false, false);
         leftCmd->pipeRedirect(m_isErrPipe, tempFile);
         leftCmd->execute();
         delete leftCmd;
