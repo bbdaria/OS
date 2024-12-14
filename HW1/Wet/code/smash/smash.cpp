@@ -142,6 +142,9 @@ void SmallShell::executeCommand(const char *original_cmd_line) {
 	std::string appliedAliasCmd = applyAliases(original_cmd_line);
 	std::string cmd_s = _trim(appliedAliasCmd);
 
+	// IO redirection: (make seperation of spaces for > and >>)
+	_surroundFirstRedirectionWithSpaces(cmd_s);
+	
     Command* cmd = createCommand(original_cmd_line, cmd_s);
 	m_jobsList.removeFinishedJobs(); // removing finished jobs before executing cmd
 	if (cmd != nullptr) {

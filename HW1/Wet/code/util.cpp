@@ -75,3 +75,20 @@ bool _isDigitsOnly(const char *str)
     }
 return true;
 }
+
+std::string &_surroundFirstRedirectionWithSpaces(std::string &cmd_s) {
+    size_t pos = cmd_s.find('>');
+    if (pos != std::string::npos) {
+        // Check if it's a >> redirection
+        if (pos + 1 < cmd_s.length() && cmd_s[pos + 1] == '>') {
+            // Surround >> with spaces
+            cmd_s.insert(pos + 2, " ");
+            cmd_s.insert(pos, " ");
+        } else {
+            // Surround > with spaces
+            cmd_s.insert(pos + 1, " ");
+            cmd_s.insert(pos, " ");
+        }
+    }
+    return cmd_s;
+}
