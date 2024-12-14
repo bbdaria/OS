@@ -138,7 +138,8 @@ void SmallShell::executeCommand(const char *original_cmd_line) {
 bool SmallShell::preProcessCmdLine(const char *original_cmd_line, std::string& out) {
 	std::string originalCmd = strdup(original_cmd_line);
 	out = _trim(originalCmd);
-	bool background = out.at(out.size()-1) == '&';
+	if (out.length() == 0) return false;
+	bool background = out.at(out.length()-1) == '&';
 	if (background) {
 		out = out.substr(0, out.size()-1);
 		out = _trim(out);

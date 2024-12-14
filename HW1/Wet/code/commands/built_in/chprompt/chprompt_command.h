@@ -8,7 +8,7 @@ class Chprompt : public BuiltInCommand {
 public:
     Chprompt(char** args, int words) : m_prompt("") {
         if (words >= 2) {
-            m_prompt = args[1];
+            m_prompt = strdup(args[1]);
         }
     }
     virtual ~Chprompt()=default;
