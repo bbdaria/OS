@@ -125,8 +125,9 @@ void SmallShell::executeCommand(const char *original_cmd_line) {
 
 	// I/O redirection: (cuts cmd_s)
 	auto redirectResultIO = _redirectIO(cmd_s);
+	bool isRedirection = redirectResultIO.first;
 	
-    Command* cmd = createCommand(original_cmd_line, cmd_s, background);
+    Command* cmd = createCommand(original_cmd_line, cmd_s, background && !isRedirection);
 	if (cmd != nullptr) {
 		cmd->redirectIO(redirectResultIO);
 		m_jobsList.removeFinishedJobs(); // removing finished jobs before executing cmd
