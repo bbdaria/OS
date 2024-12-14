@@ -20,7 +20,13 @@ test: $(TESTS_OUTPUTS)
 $(TESTS_OUTPUTS): $(SMASH_BIN)
 $(TESTS_OUTPUTS): tests/test_output%.txt: tests/test_input%.txt tests/test_expected_output%.txt
 	@./$(SMASH_BIN) < $(word 1, $^) > $@
-	@diff $@ $(word 2, $^) && echo $(word 1, $^) ++PASSED++ || echo $(word 1, $^) --FAILED--
+	@test -s $@ && test -s $(word 2, $^) || (echo "Error: Empty file in test comparison"; exit 1)
+	@if diff -q $@ $(word 2, $^); then \
+	    echo -e "\e[32m$(word 1, $^) ++PASSED++\e[0m"; \
+	else \
+	    echo -e "\e[31m$(word 1, $^) --FAILED--\e[0m"; \
+	    diff $@ $(word 2, $^); \
+	fi
 
 $(SMASH_BIN): $(OBJS)
 	$(COMPILER) $(COMPILER_FLAGS) $^ -o $@
