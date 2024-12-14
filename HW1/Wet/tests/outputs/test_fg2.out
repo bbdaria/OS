@@ -1,0 +1,7 @@
+smash> smash> smash> smash> smash> smash> sleep 300& 27706
+smash: got ctrl-C
+smash: process 27706 was killed
+smash> sleep 100& 27704
+smash: got ctrl-C
+smash: process 27704 was killed
+smash> 
