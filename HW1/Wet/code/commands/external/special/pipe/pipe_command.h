@@ -26,7 +26,15 @@ public:
 
     void actualExecute(JobsList::JobEntry* childJob) override {
         SmallShell& smash = SmallShell::getInstance();
-        std::string tempFile = "/tmp/smash_pipe_output_" + std::to_string(getpid()) + ".txt";
+        
+        char tempFileTemplate[] = "/tmp/smash_pipe_output_XXXXXX";
+        int tempFd = mkstemp(tempFileTemplate);
+        if (tempFd < 0) {
+            perror("smash error: mkstemp failed");
+            return;
+        }
+        close(tempFd);
+        std::string tempFile(tempFileTemplate);
 
         // Create and execute the left command
         std::string leftTrimmed = _trim(m_leftCmdLine);
@@ -44,9 +52,9 @@ public:
             return;
         }
 
-        m_rightCmdLine.append(" " + fileContent);
+        m_rightCmdLine.append(fileContent);
         // Prepare the right command
-        std::string rightTrimmed = _trim(m_rightCmdLine);
+        std::string rightTrimmed = strdup((m_rightCmdLine).c_str());
         Command* rightCmd = smash.createCommand(m_rightCmdLine.c_str(), rightTrimmed);
         rightCmd->execute();
         delete rightCmd;
