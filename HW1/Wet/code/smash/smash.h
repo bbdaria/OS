@@ -2,6 +2,7 @@
 #define SMASH_H_
 
 #include <iostream>
+#include <cstring>
 #include <set>
 #include <map>
 #include "commands/Commands.h"
@@ -54,8 +55,8 @@ public:
     }
 
     void updatePlastPwd(char* cwd) {
-        delete m_plastPwd;
-        m_plastPwd = cwd;
+        if (m_plastPwd) free(m_plastPwd);
+        m_plastPwd = strdup(cwd);
     }
 
     void quit() {

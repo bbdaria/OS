@@ -3,12 +3,14 @@
 
 #include "../built_in_command.h"
 #include <unistd.h> // getcwd
+#include <cstring>  // strerror
+#include <cstdlib>  // free
 
 class ChangeDirCommand : public BuiltInCommand {
 public:
     ChangeDirCommand(char** args, int words) : m_error(false), m_skip(false) {
         if (words <= 1) {
-            m_skip = true;
+            m_skip = true; // No directory specified
         }
         else if (words > 2) {
             m_err_msg = "smash error: cd: too many arguments";
@@ -34,17 +36,30 @@ public:
         // this is built-in command and so will run at smash PCB
         // update smash last-working-directory
         char *currDir = getcwd(nullptr, 0);
+        if (!currDir) {
+            perror("smash error: getcwd failed");
+            return;
+        }
+
         SmallShell& smash = SmallShell::getInstance();
-        smash.updatePlastPwd(currDir);
 
-        if (m_skip) return;
+        if (m_skip) {
+            smash.updatePlastPwd(currDir);
+            return;
+        }
 
-        if (m_dir.compare("-")) {
+        if (m_dir.compare("-") == 0) {
             m_dir = smash.plastPwd();
         }
-        
-        int result = chdir(m_dir.c_str());
-        if (result == 0) perror("smash error: chdir failed");
+
+        // Attempt to change the directory
+        if (chdir(m_dir.c_str()) != 0) {
+            perror("smash error: chdir failed");
+        }
+        else {
+            smash.updatePlastPwd(currDir);
+        }
+        free(currDir);
     }
 
 private:
