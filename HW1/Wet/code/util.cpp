@@ -76,19 +76,24 @@ bool _isDigitsOnly(const char *str)
 return true;
 }
 
-std::string &_surroundFirstRedirectionWithSpaces(std::string &cmd_s) {
+std::pair<bool,std::pair<bool,std::string>> _redirectIO(std::string& cmd_s) {
     size_t pos = cmd_s.find('>');
-    if (pos != std::string::npos) {
+	bool redirectIO = pos != std::string::npos;
+	bool append = false;
+    if (redirectIO) {
         // Check if it's a >> redirection
         if (pos + 1 < cmd_s.length() && cmd_s[pos + 1] == '>') {
-            // Surround >> with spaces
-            cmd_s.insert(pos + 2, " ");
-            cmd_s.insert(pos, " ");
-        } else {
-            // Surround > with spaces
-            cmd_s.insert(pos + 1, " ");
-            cmd_s.insert(pos, " ");
+            // operand >>
+			append = true;
         }
     }
-    return cmd_s;
+	std::pair<bool,std::pair<bool,std::string>> result = std::pair<bool,std::pair<bool,std::string>>();
+	result.first = redirectIO;
+	if (redirectIO) {
+		result.second.first = append;
+		result.second.second = _trim(cmd_s.substr(pos+(append ? 2 : 1), cmd_s.size()-(pos+(append ? 2 : 1))));
+
+		cmd_s = cmd_s.substr(0, pos);
+	}
+    return result;
 }

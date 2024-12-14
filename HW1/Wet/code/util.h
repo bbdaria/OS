@@ -35,6 +35,6 @@ void _removeBackgroundSign(char *cmd_line);
 
 bool _isDigitsOnly(const char* str);
 
-std::string& _surroundFirstRedirectionWithSpaces(std::string& cmd_s);
+std::pair<bool,std::pair<bool,std::string>> _redirectIO(std::string& cmd_s);
 
 #endif // UTIL_H_

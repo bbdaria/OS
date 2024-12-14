@@ -103,20 +103,6 @@ Command* SmallShell::createCommand(const char *original_cmd_line, std::string& c
 	return result;
 }
 
-void _redirectIO(Command* cmd, const char *cmd_line) {
-	// check whether > or >> is in cmd_line and apply cmd->setRedirectionFile accordingly.
-	std::string commandStr(cmd_line);
-    size_t redirectionPos = commandStr.find_first_of('>');
-    if (redirectionPos != std::string::npos) {
-        bool append = (redirectionPos + 1 < commandStr.size() && commandStr[redirectionPos + 1] == '>');
-        size_t fileStart = redirectionPos + (append ? 2 : 1);
-		std::string secHalf = commandStr.substr(fileStart, commandStr.size()-fileStart);
-        std::string file = _trim(secHalf);
-
-        cmd->setRedirectionFile(file, append);
-    }
-}
-
 std::string SmallShell::applyAliases(const std::string& cmd_line) {
     std::string cmd_s = strdup(cmd_line.c_str());
     std::map<std::string, AliasVal>& aliases = getAliases();
@@ -142,13 +128,13 @@ void SmallShell::executeCommand(const char *original_cmd_line) {
 	std::string appliedAliasCmd = applyAliases(original_cmd_line);
 	std::string cmd_s = _trim(appliedAliasCmd);
 
-	// IO redirection: (make seperation of spaces for > and >>)
-	_surroundFirstRedirectionWithSpaces(cmd_s);
+	// I/O redirection: (cuts cmd_s)
+	auto redirectResultIO = _redirectIO(cmd_s);
 	
     Command* cmd = createCommand(original_cmd_line, cmd_s);
-	m_jobsList.removeFinishedJobs(); // removing finished jobs before executing cmd
 	if (cmd != nullptr) {
-		_redirectIO(cmd, cmd_s.c_str());
+		cmd->redirectIO(redirectResultIO);
+		m_jobsList.removeFinishedJobs(); // removing finished jobs before executing cmd
         cmd->execute();
         delete cmd; // Prevent memory leaks
     }

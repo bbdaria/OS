@@ -17,7 +17,7 @@ public:
         else {
             m_dir = args[1];
             SmallShell& smash = SmallShell::getInstance();
-            if (m_dir.compare("-") && smash.plastPwd()==nullptr) {
+            if (m_dir.compare("-")==0 && smash.plastPwd()==nullptr) {
                 m_err_msg = "smash error: cd: OLDPWD not set";
                 m_error = true;
             }
@@ -44,7 +44,7 @@ public:
         }
         
         int result = chdir(m_dir.c_str());
-        if (!result) perror("smash error: chdir failed");
+        if (result == 0) perror("smash error: chdir failed");
     }
 
 private:

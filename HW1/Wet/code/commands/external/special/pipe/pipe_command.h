@@ -3,14 +3,14 @@
 
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/wait.h>
+#include <sys/stat.h>
+#include <cstring>
 #include "../../external_command.h"
 
 class PipeCommand : public ExternalCommand {
 public:
     PipeCommand(const char *original_cmd_line, std::string& cmd_line)
         : ExternalCommand(original_cmd_line, cmd_line) {
-
         // Split the command line into two parts: before and after the pipe
         size_t pipePos = cmd_line.find('|');
         int splitSize = 1;
@@ -26,31 +26,62 @@ public:
 
     void actualExecute(JobsList::JobEntry* childJob) override {
         SmallShell& smash = SmallShell::getInstance();
+        std::string tempFile = "/tmp/smash_pipe_output_" + std::to_string(getpid()) + ".txt";
 
-        // Create the two commands from the left and right parts of the pipe
+        // Create and execute the left command
         std::string leftTrimmed = _trim(m_leftCmdLine);
         Command* leftCmd = smash.createCommand(m_leftCmdLine.c_str(), leftTrimmed);
-
-        if (m_isErrPipe) {
-            leftCmd->setPipeErr();
-        }
-        else {
-            leftCmd->setPipeOut();
-        }
+        leftCmd->pipeRedirect(m_isErrPipe, tempFile);
         leftCmd->execute();
+        delete leftCmd;
 
-        m_rightCmdLine.append(" ");
-        m_rightCmdLine.append(leftCmd->getPipeStr());
+        std::string fileContent(readFile(tempFile));
 
+        // Delete the temporary file
+        unlink(tempFile.c_str());
+
+        if (fileContent.compare("\0") == 0) {
+            return;
+        }
+
+        m_rightCmdLine.append(" " + fileContent);
+        // Prepare the right command
         std::string rightTrimmed = _trim(m_rightCmdLine);
         Command* rightCmd = smash.createCommand(m_rightCmdLine.c_str(), rightTrimmed);
         rightCmd->execute();
+        delete rightCmd;
     }
 
 private:
     std::string m_leftCmdLine;
     std::string m_rightCmdLine;
     bool m_isErrPipe = false;
+
+    std::string readFile(const std::string& file) {
+        int fd = open(file.c_str(), O_RDONLY);
+        if (fd < 0) {
+            perror("smash error: open failed");
+            return "\0";
+        }
+
+        // Read the file content using a buffer
+        constexpr size_t BUFFER_SIZE = 4096;
+        char buffer[BUFFER_SIZE];
+        std::string fileContent;
+        ssize_t bytesRead;
+        while ((bytesRead = read(fd, buffer, BUFFER_SIZE)) > 0) {
+            fileContent.append(buffer, bytesRead);
+        }
+
+        if (bytesRead < 0) {
+            perror("smash error: failed to read temporary file");
+            close(fd);
+            return "\0";
+        }
+        close(fd);
+
+        return fileContent;
+    }
 };
 
 #endif // PIPE_COMMAND_H_
