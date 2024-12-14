@@ -7,9 +7,8 @@ GREENBG='\e[42m'
 BLUEBG='\e[44m'
 NC='\033[0m' # No Color
 
-KEEP_ORIG=1
 TASKS=${TASKS:-20}
-TIMEOUT=60
+TIMEOUT=15
 TESTS_INPUT=`pwd`/tests/inputs
 TESTS_GLOB=$TESTS_INPUT/${1:-test_*}
 TESTS_OUTPUT=`pwd`/tests/outputs
@@ -68,10 +67,6 @@ do_diff()
         if [ $KEEP_ORIG -eq 0 ] ; then
             rm -f $TESTS_OUTPUT/$test.out $TESTS_OUTPUT/$test.err
         fi
-		fg_file="$TESTS_OUTPUT/test_fg.out.processed"
-		if [[ -f "$fg_file" ]]; then
-			sed -i -E 's/(& )[0-9]+/\12/' "$fg_file"
-		fi
         output_result="${YELLOW}MISSING${NC}"
         if [ -f "$TESTS_EXPECTED/$test.out.exp" ]; then
             if [ "`diff -q --strip-trailing-cr $TESTS_EXPECTED/$test.out.exp $TESTS_OUTPUT/$test.out.processed`" ]; then

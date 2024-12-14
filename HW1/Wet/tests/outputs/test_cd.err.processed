@@ -1,22 +1,5 @@
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
-smash error: exec failed: No such file or directory
+smash error: cd: OLDPWD not set
+smash error: cd: too many arguments
+smash error: chdir failed: No such file or directory
+smash error: chdir failed: No such file or directory
+smash error: chdir failed: No such file or directory

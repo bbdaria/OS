@@ -24,6 +24,7 @@ PID_EXTRACTOR_REGEX = r"(signal number \d+ was sent to pid (\d+)\n)|"\
     "(smash> .* : (\d+)\n)"  # fg/bg
 TIMEZONE_REGEX = r"(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\.\d+ \+)(\d+)"
 
+
 def get_pids_match(fname, pids, counter=2):
     with open(fname, "r") as file:
         end = False
