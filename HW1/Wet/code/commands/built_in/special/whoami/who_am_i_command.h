@@ -72,10 +72,7 @@ private:
             if (nextPos == std::string::npos) return false;
             std::string homedir = line.substr(pos, nextPos - pos);
 
-            printOut(username);
-            printOut(" ");
-            printOut(homedir);
-            printOut("\n");
+            std::cout << username << " " << homedir << std::endl;
             return true;
         }
         return false;

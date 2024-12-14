@@ -12,10 +12,7 @@ public:
     void execute() override {
         // this is built-in command and so will run at smash PCB
         SmallShell &smash = SmallShell::getInstance();
-        printOut(smash.getStartPrompt());
-        printOut(" pid is ");
-        printOut(std::to_string(getpid()));
-        printOut("\n");
+        std::cout << smash.getStartPrompt() << " pid is " << std::to_string(getpid()) << std::endl;
     }
 };
 

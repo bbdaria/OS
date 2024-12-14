@@ -37,24 +37,6 @@ public:
         m_stdFlag = isErrPipe ? STDERR_FILENO : STDOUT_FILENO;
         stdRedirect();
     }
-
-    void printOut(char chr) {
-        std::string str(1, chr);
-        printOut(str);
-    }
-    void printOut(const std::string& str) {
-        if (str.compare("\n") == 0) {
-            std::cout << std::endl;
-        }
-        else {
-            // Output the str
-            std::cout << str;
-        }
-    }
-
-    void printErr(const std::string& str) {
-        std::cerr << str;
-    }
 private:
     bool m_isRedirection;
     std::string m_redirectionFile;

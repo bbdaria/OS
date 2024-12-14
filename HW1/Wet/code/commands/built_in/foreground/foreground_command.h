@@ -16,8 +16,7 @@ public:
     void execute() override {
         init();
         if (m_error) {
-            printErr(m_err_msg);
-            printErr("\n");
+            std::cerr << m_err_msg << std::endl;
             return;
         }
         SmallShell &smash = SmallShell::getInstance();
@@ -26,10 +25,7 @@ public:
         smash.setForeGround(jobEntry);
         int fgPID = jobEntry->getPID();
         std::string cmd_line = jobEntry->getCmdLine();
-        printOut(cmd_line);
-        printOut(" ");
-        printOut(std::to_string(fgPID));
-        printOut("\n");
+        std::cout << cmd_line << " " << std::to_string(fgPID) << std::endl;
 
         if (waitpid(fgPID, nullptr, 0) == -1) {
             perror("smash error: waitpid failed");

@@ -34,12 +34,8 @@ public:
             return m_cmd_line;
         }
 
-        void printJob(Command* command) {
-            command->printOut("[");
-            command->printOut(std::to_string(m_jobId));
-            command->printOut("] ");
-            command->printOut(m_cmd_line);
-            command->printOut("\n");
+        void printJob() {
+            std::cout << "[" << std::to_string(m_jobId) << "] " << m_cmd_line << std::endl;
         }
     };
 
@@ -72,21 +68,18 @@ public:
         m_listOfJobs.push_back(job);
     }
 
-    void printJobsList(Command* command) {
+    void printJobsList() {
         removeFinishedJobs(); // removing finished jobs before printing
         for (JobEntry* jobEntry : m_listOfJobs) {
-            jobEntry->printJob(command);
+            jobEntry->printJob();
         }
     }
 
-    void killAllJobs(Command* command) {
+    void killAllJobs() {
         for (JobEntry* jobEntry : m_listOfJobs) {
             int pid = jobEntry->getPID();
             kill(pid, SIGKILL);
-            command->printOut(std::to_string(pid));
-            command->printOut(": ");
-            command->printOut(jobEntry->getCmdLine());
-            command->printOut("\n");
+            std::cout << std::to_string(pid) << ": " << jobEntry->getCmdLine() << std::endl;
         }
     }
 

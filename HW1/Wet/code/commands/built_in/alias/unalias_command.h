@@ -26,8 +26,7 @@ public:
 
     void execute() override {
         if (m_error) {
-            printErr(m_err_msg);
-            printErr("\n");
+            std::cerr << m_err_msg << std::endl;
             return;
         }
 
@@ -37,10 +36,7 @@ public:
         for (const std::string& alias : m_names) {
             if (aliases.erase(alias) == 0) {
                 // Report error if alias does not exist
-                printErr("smash error: unalias: ");
-                printErr(alias);
-                printErr(" alias does not exist");
-                printErr("\n");
+                std::cerr << "smash error: unalias: " << alias << " alias does not exist" << std::endl;
                 return;
             }
         }

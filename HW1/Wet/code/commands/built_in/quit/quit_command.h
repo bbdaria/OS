@@ -22,12 +22,10 @@ public:
         SmallShell &smash = SmallShell::getInstance();
         JobsList& jobsList = smash.getJobsList();
         if (m_kill_jobsList) {
-            printOut(smash.getStartPrompt());
-            printOut(": sending SIGKILL signal to ");
-            printOut(std::to_string(jobsList.size()));
-            printOut(" jobs:");
-            printOut("\n");
-            jobsList.killAllJobs(this);
+            std::string prompt = smash.getStartPrompt();
+            std::string number = std::to_string(jobsList.size());
+            std::cout << prompt << ": sending SIGKILL signal to " << number << " jobs:" << std::endl;
+            jobsList.killAllJobs();
         }
         smash.quit();
     }

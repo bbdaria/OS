@@ -31,8 +31,7 @@ public:
 
     void execute() override {
         if (m_error) {
-            printErr(m_err_msg);
-            printErr("\n");
+            std::cerr << m_err_msg << std::endl;
             return;
         }
 
@@ -65,10 +64,10 @@ private:
 
     void printIndent(const std::string& name, int indentLevel) {
         for (int i = 0; i < indentLevel; ++i) {
-            printOut("\t");
+            std::cout << "\t";
         }
-        printOut(name);
-        printOut("\n");
+        std::cout << name;
+        std::cout << std::endl;
     }
 
     void printListedDirectory(int dirFd, const char* dirPath, int indentLevel) {

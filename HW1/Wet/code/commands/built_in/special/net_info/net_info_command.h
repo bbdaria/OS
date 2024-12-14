@@ -25,8 +25,7 @@ public:
 
     void execute() override {
         if (m_error) {
-            printErr(m_err_msg);
-            printErr("\n");
+            std::cerr << m_err_msg << std::endl;
             return;
         }
 
@@ -42,10 +41,7 @@ public:
 
         // Get IP Address
         if (ioctl(sock, SIOCGIFADDR, &ifr) < 0) {
-            printErr("smash error: netinfo: interface ");
-            printErr(m_interface);
-            printErr(" does not exist");
-            printErr("\n");
+            std::cerr << "smash error: netinfo: interface " << m_interface << " does not exist" << std::endl;
             close(sock);
             return;
         }

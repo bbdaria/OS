@@ -20,12 +20,7 @@ public:
             for (const auto &alias : aliases) {
                 std::string name = alias.first;
                 std::pair<std::string,char> val = alias.second;
-                printOut(name);
-                printOut("=");
-                printOut(val.second);
-                printOut(val.first);
-                printOut(val.second);
-                printOut("\n");
+                std::cout << name << "=" << val.second << val.first << val.second << std::endl;
             }
             return;
         }
@@ -35,18 +30,15 @@ public:
         char quotationMarks;
         bool validFormat = isValidAliasFormat(cmd_s, name, command, quotationMarks);
         if (!validFormat) {
-            printErr("smash error: alias: invalid alias format");
-            printErr("\n");
+            std::cerr << "smash error: alias: invalid alias format" << std::endl;
             return;
         }
         else {
             // Validate and add alias
             auto& aliases = SmallShell::getInstance().getAliases();
             if (isReservedCommand(name) || aliases.find(name) != aliases.end()) {
-                printErr("smash error: alias: ");
-                printErr(name);
-                printErr(" already exists or is a reserved command");
-                printErr("\n");
+                std::cerr << "smash error: alias: " << name << " already exists or is a reserved command";
+                std::cerr << std::endl;
                 return;
             }
             // Add alias

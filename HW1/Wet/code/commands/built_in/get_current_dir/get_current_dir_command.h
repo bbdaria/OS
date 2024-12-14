@@ -12,8 +12,7 @@ public:
     void execute() override {
         char *cwd = getcwd(nullptr, 0);
         if (cwd != nullptr) {
-            printOut(cwd);
-            printOut("\n");
+            std::cout << cwd << std::endl;
             free(cwd);
         }
         else {

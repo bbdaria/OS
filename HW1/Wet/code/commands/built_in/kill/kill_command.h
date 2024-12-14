@@ -30,18 +30,15 @@ public:
 
     void execute() override {
         if (m_error) {
-            printErr(m_err_msg);
-            printErr("\n");
+            std::cerr << m_err_msg << std::endl;
             return;
         }
         SmallShell& smash = SmallShell::getInstance();
         JobsList& jobsList = smash.getJobsList();
 
         if (!jobsList.contains(m_jobId)) {
-            printErr("smash error: kill: job-id ");
-            printErr(std::to_string(m_jobId));
-            printErr(" does not exist");
-            printErr("\n");
+            std::cerr << "smash error: kill: job-id " << std::to_string(m_jobId) << " does not exist";
+            std::cerr << std::endl;
             return;
         }
 
@@ -53,11 +50,8 @@ public:
             return;
         }
 
-        printOut("signal number ");
-        printOut(std::to_string(m_sigNum));
-        printOut(" was sent to pid ");
-        printOut(std::to_string(pid));
-        printOut("\n");
+        std::cout << "signal number " << std::to_string(m_sigNum) << " was sent to pid " << std::to_string(pid);
+        std::cout << std::endl;
     }
 
 private:

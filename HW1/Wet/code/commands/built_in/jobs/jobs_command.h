@@ -14,7 +14,7 @@ public:
     void execute() override {
         SmallShell &smash = SmallShell::getInstance();
         JobsList& jobsList = smash.getJobsList();
-        jobsList.printJobsList(this);
+        jobsList.printJobsList();
     }
 };
 
