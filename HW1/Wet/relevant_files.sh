@@ -18,7 +18,7 @@ ADDITIONAL_FILES=(
 
 # Append additional files to the output file
 for file in "${ADDITIONAL_FILES[@]}"; do
-    echo "$file" >> "../../../$OUTPUT_FILE"
+    echo "$RELATIVE_PATH/$file" >> "../../../$OUTPUT_FILE"
 done
 
 cd -
