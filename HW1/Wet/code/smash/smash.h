@@ -105,6 +105,7 @@ public:
 
             // external
             "sleep",
+            "cat",
             "ls",
         };
     }
