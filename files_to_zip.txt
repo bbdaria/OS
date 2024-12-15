@@ -1,8 +1,8 @@
 submitters.txt
+HW1/Wet/code/small_shell/smash.h
+HW1/Wet/code/small_shell/smash.cpp
 HW1/Wet/code/joblist/joblist.h
 HW1/Wet/code/util.h
-HW1/Wet/code/smash/smash.h
-HW1/Wet/code/smash/smash.cpp
 HW1/Wet/code/signals/signals.h
 HW1/Wet/code/signals/signals.cpp
 HW1/Wet/code/main.cpp
