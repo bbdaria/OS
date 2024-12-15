@@ -3,3 +3,4 @@ files_to_zip.txt
 .vscode/
 
 HW*/WetTest/temp
+HW*/WetTest/tests/outputs
