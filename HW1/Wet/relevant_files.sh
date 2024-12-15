@@ -12,7 +12,7 @@ find . -type f \( -name "*.cpp" -o -name "*.h" \) | sed "s|^./|$RELATIVE_PATH/|"
 
 # Include additional files such as Makefile
 ADDITIONAL_FILES=(
-    "../Makefile"
+    "Makefile"
     # "../submitters.txt" (will be added in GLOBAL_FILES)
 )
 
