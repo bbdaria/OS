@@ -1,8 +1,8 @@
 #include <unistd.h>
 // #include <sys/wait.h>
 #include <signal.h> // library usage
-#include "signals/signals.h"
-#include "smash/smash.h"
+#include "signals.h"
+#include "smash.h"
 
 int main(int argc, char *argv[]) {
     if (signal(SIGINT, ctrlCHandler) == SIG_ERR) {

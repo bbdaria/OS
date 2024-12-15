@@ -10,7 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <net/if.h>
-#include "../../built_in_command.h"
+#include "built_in_command.h"
 
 class NetinfoCommand : public BuiltInCommand {
 public:

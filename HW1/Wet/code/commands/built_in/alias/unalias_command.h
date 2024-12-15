@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "../built_in_command.h"
-#include "smash/smash.h"
+#include "built_in_command.h"
+#include "smash.h"
 
 class UnaliasCommand : public BuiltInCommand {
 public:

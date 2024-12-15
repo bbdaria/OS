@@ -4,8 +4,8 @@
 #include <vector>
 #include <sys/wait.h>
 
-#include "smash/smash.h"
-#include "commands/Commands.h"
+#include "smash.h"
+#include "Commands.h"
 
 class JobsList {
 public:

@@ -1,7 +1,7 @@
 #ifndef COMPLEX_EXTERNAL_COMMAND_H_
 #define COMPLEX_EXTERNAL_COMMAND_H_
 
-#include "../external_command.h"
+#include "external_command.h"
 #include "util.h"
 
 class ComplexExternalCommand : public ExternalCommand {

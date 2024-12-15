@@ -1,8 +1,8 @@
 #ifndef EXTERNAL_COMMAND_H_
 #define EXTERNAL_COMMAND_H_
 
-#include "commands/Commands.h"
-#include "smash/smash.h"
+#include "Commands.h"
+#include "smash.h"
 #include "util.h"
 
 class ExternalCommand : public Command {

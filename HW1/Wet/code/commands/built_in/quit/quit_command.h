@@ -2,9 +2,9 @@
 #define QUIT_COMMAND_H_
 
 #include <unistd.h> // getcwd
-#include "../built_in_command.h"
-#include "smash/smash.h"
-#include "joblist/joblist.h"
+#include "built_in_command.h"
+#include "smash.h"
+#include "joblist.h"
 
 class QuitCommand : public BuiltInCommand {
 public:

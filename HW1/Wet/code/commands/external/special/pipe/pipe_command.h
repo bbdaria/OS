@@ -5,7 +5,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <cstring>
-#include "../../external_command.h"
+#include "external_command.h"
 
 class PipeCommand : public ExternalCommand {
 public:

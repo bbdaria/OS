@@ -1,8 +1,8 @@
 #ifndef SHOW_PID_COMMAND_H_
 #define SHOW_PID_COMMAND_H_
 
-#include "../built_in_command.h"
-#include "smash/smash.h"
+#include "built_in_command.h"
+#include "smash.h"
 
 class ShowPidCommand : public BuiltInCommand {
 public:

@@ -4,28 +4,27 @@
 #include <vector>
 #include <sstream>
 #include <iomanip>
-#include "smash/smash.h"
 
-#include "util.h"
-#include "commands/built_in/chprompt/chprompt_command.h"
-#include "commands/built_in/show_pid/show_pid_command.h"
-#include "commands/built_in/get_current_dir/get_current_dir_command.h"
-#include "commands/built_in/change_dir/change_dir_command.h"
-#include "commands/built_in/jobs/jobs_command.h"
-#include "commands/built_in/foreground/foreground_command.h"
-#include "commands/built_in/quit/quit_command.h"
-#include "commands/built_in/kill/kill_command.h"
-#include "commands/built_in/alias/alias_command.h"
-#include "commands/built_in/alias/unalias_command.h"
-#include "commands/built_in/special/listdir/listdir_command.h"
-#include "commands/built_in/special/net_info/net_info_command.h"
-#include "commands/built_in/special/whoami/who_am_i_command.h"
-
-#include "commands/external/external_command.h"
-#include "commands/external/simple/simple_command.h"
-#include "commands/external/complex/complex_command.h"
-#include "commands/external/special/pipe/pipe_command.h"
 #include "smash.h"
+#include "util.h"
+#include "chprompt_command.h"
+#include "show_pid_command.h"
+#include "get_current_dir_command.h"
+#include "change_dir_command.h"
+#include "jobs_command.h"
+#include "foreground_command.h"
+#include "quit_command.h"
+#include "kill_command.h"
+#include "alias_command.h"
+#include "unalias_command.h"
+#include "listdir_command.h"
+#include "net_info_command.h"
+#include "who_am_i_command.h"
+
+#include "external_command.h"
+#include "simple_command.h"
+#include "complex_command.h"
+#include "pipe_command.h"
 
 BuiltInCommand* _createBuiltInCommand(char** args, int words, std::string cmd_s) {
 	std::string firstWord = _trim(args[0]);

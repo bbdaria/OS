@@ -5,8 +5,8 @@
 #include <cstring>
 #include <set>
 #include <vector>
-#include "commands/Commands.h"
-#include "joblist/joblist.h"
+#include "Commands.h"
+#include "joblist.h"
 
 typedef std::pair<std::string, char> AliasVal;
 typedef std::pair<std::string, AliasVal> Alias;

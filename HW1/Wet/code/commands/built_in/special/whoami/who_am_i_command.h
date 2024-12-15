@@ -7,7 +7,7 @@
 #include <cstring>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "../../built_in_command.h"
+#include "built_in_command.h"
 
 class WhoamiCommand : public BuiltInCommand {
 public:

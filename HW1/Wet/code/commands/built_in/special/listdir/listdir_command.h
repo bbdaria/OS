@@ -12,7 +12,7 @@
 #include <string>
 #include <sys/syscall.h>  // For SYS_open
 #include <fcntl.h>
-#include "../../built_in_command.h"
+#include "built_in_command.h"
 
 class ListDirCommand : public BuiltInCommand {
 public:

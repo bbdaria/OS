@@ -4,8 +4,8 @@
 #include <iostream>
 #include <regex>
 #include <string>
-#include "../built_in_command.h"
-#include "smash/smash.h"
+#include "built_in_command.h"
+#include "smash.h"
 
 class AliasCommand : public BuiltInCommand {
 public:
