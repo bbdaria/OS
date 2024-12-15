@@ -26,4 +26,4 @@ HW1/Wet/code/commands/external/special/pipe/pipe_command.h
 HW1/Wet/code/commands/external/simple/simple_command.h
 HW1/Wet/code/commands/external/complex/complex_command.h
 HW1/Wet/code/util.cpp
-HW1/Wet/code/../Makefile
+HW1/Wet/code/Makefile
